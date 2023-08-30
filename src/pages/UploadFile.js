@@ -19,7 +19,7 @@ import CssIcon from '@mui/icons-material/Css';
 import JavascriptIcon from '@mui/icons-material/Javascript';
 import PhpIcon from '@mui/icons-material/Php';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-// this is commited
+
 export default function CenteredCard() {
     const theme = useTheme();
     const [selectedFile, setSelectedFile] = React.useState(null);

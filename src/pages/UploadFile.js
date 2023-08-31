@@ -76,6 +76,7 @@ export default function CenteredCard() {
     const handleUploadFile = () => {
         if (selectedFile) {
             setLoading(true);
+            setUploadProgress(0);
             const formData = new FormData();
             formData.append('file', selectedFile);
 

@@ -16,20 +16,19 @@ function App() {
     <>
     <BrowserRouter>
       <Appbar />
-    <Routes>
+    <Routes >
+          <Route path="/" element={<Files />}  index/>
           <Route path="/files" element={<Files />} />
-          <Route path="/" element={<Files />} />
           <Route path="/code" element={<Code />} />
           <Route path="/text" element={<Text />} />
           <Route path="/link" element={<Link />} />
-          <Route path="/upload-file" element={<UploadFile />} />
+          <Route path="/upload-file" element={<UploadFile />}/>
           <Route path="/upload-text" element={<UploadText />} />
           <Route path="/upload-code" element={<UploadCode />} />
           <Route path="/upload-link" element={<UploadLink />} />
         </Routes>     
       <Tabs />
   </BrowserRouter>
-
     </>
   );
 }

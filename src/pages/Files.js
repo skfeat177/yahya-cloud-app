@@ -167,9 +167,10 @@ function Files() {
     {/* Snackbar for showing success message */}
     <Snackbar
       open={snackbarOpen}
-      autoHideDuration={500}
+      autoHideDuration={1000}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       onClose={() => setSnackbarOpen(false)}
+      sx={{marginBottom:7}}
     >
       <MuiAlert
         elevation={6}

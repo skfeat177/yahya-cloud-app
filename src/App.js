@@ -1,33 +1,35 @@
+import React from 'react';
+import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import Appbar from './components/Appbar';
-import './App.css';
 import UploadFile from './pages/UploadFile';
 import UploadText from './pages/UploadText';
 import UploadCode from './pages/UploadCode';
 import UploadLink from './pages/UploadLink';
-import Tabs from './components/Tabs'
+import Tabs from './components/Tabs';
 import Files from './pages/Files';
-import { Box } from '@mui/material';
 import Text from './pages/Text';
 import Code from './pages/Code';
 import Link from './pages/Link';
 
-
 function App() {
   return (
     <>
+    <BrowserRouter>
       <Appbar />
-      <Box>
-        {/* <Link/> */}
-      <Files/>
-      {/* <Code/> */}
-      {/* <Text/> */}   
-      {/* <UploadFile/> */}
-      {/* <UploadText/> */}
-      {/* <UploadCode /> */}
-      {/* <UploadLink/> */}
-      </Box>
+    <Routes>
+          <Route path="/files" element={<Files />} />
+          <Route path="/" element={<Files />} />
+          <Route path="/code" element={<Code />} />
+          <Route path="/text" element={<Text />} />
+          <Route path="/link" element={<Link />} />
+          <Route path="/upload-file" element={<UploadFile />} />
+          <Route path="/upload-text" element={<UploadText />} />
+          <Route path="/upload-code" element={<UploadCode />} />
+          <Route path="/upload-link" element={<UploadLink />} />
+        </Routes>     
+      <Tabs />
+  </BrowserRouter>
 
-      <Tabs/>
     </>
   );
 }

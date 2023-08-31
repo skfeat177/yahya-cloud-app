@@ -21,12 +21,14 @@ import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
 import CloudQueueOutlinedIcon from '@mui/icons-material/CloudQueueOutlined';
+import { Link } from 'react-router-dom';
+
 const drawerWidth = 240;
 const navItems = [
-  { label: 'Upload File', icon: <InsertDriveFileOutlinedIcon /> },
-  { label: 'Upload Code Snippet', icon: <CodeOutlinedIcon /> },
-  { label: 'Upload Text', icon: <TextSnippetOutlinedIcon /> },
-  { label: 'Upload Link', icon: <LinkOutlinedIcon /> },
+  { label: 'Upload File', link:"/upload-file",icon: <InsertDriveFileOutlinedIcon /> },
+  { label: 'Upload Code Snippet',link:"/upload-code", icon: <CodeOutlinedIcon /> },
+  { label: 'Upload Text',link:"upload-text", icon: <TextSnippetOutlinedIcon /> },
+  { label: 'Upload Link',link:"upload-link", icon: <LinkOutlinedIcon /> },
 ];
 
 function DrawerAppBar(props) {
@@ -42,20 +44,21 @@ function DrawerAppBar(props) {
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <CloudQueueOutlinedIcon />
         <Typography variant="h6" sx={{ my: 2, color: "grey", marginLeft: 1 }}>
-          Quick Cloud Share
+         Cloud Share
         </Typography>
       </Box>
 
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItem key={item.label} disablePadding>
-            <ListItemButton sx={{ textAlign: 'left' }}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontWeight: 'bold', color: 'grey', marginLeft: -2 } }}
-              />
-            </ListItemButton>
-          </ListItem>
+    <ListItem key={item.label} disablePadding>
+    <Link to={item.link} style={{ textDecoration: 'none' }}>
+      <ListItemButton sx={{ textAlign: 'left' }}>
+        <ListItemIcon>{item.icon}</ListItemIcon>
+        <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontWeight: 'bold', color: 'grey', marginLeft: -2 } }} />
+      </ListItemButton>
+    </Link>
+  </ListItem>
         ))}
       </List>
     </Box>
@@ -80,15 +83,17 @@ function DrawerAppBar(props) {
           <Box sx={{ display: 'flex' , alignItems: 'center', justifyContent: 'center' }}>
             <CloudQueueOutlinedIcon />
             <Typography variant="h6" sx={{ my: 2, color: "white", marginLeft: 1 }}>
-              Quick Cloud Share
+              Cloud Share
             </Typography>
           </Box>
           <Box sx={{ display: { xs: 'none', sm: 'flex'},flex: 1, justifyContent: 'flex-end'  }}>
             {navItems.map((item) => (
+                 <Link to={item.link} style={{ textDecoration: 'none' }}>
               <Button key={item.label} sx={{ color: '#fff', alignItems: 'center', marginRight: 2 }}>
                 {React.cloneElement(item.icon, { sx: { fontSize: 20, marginRight: "5px", alignSelf: "center" } })}
                 {item.label}
               </Button>
+              </Link> 
             ))}
           </Box>
         </Toolbar>

@@ -32,7 +32,7 @@ function Files() {
     fetch('https://quick-share-cors.vercel.app/getallfiles')
       .then(response => response.json())
       .then(data => {
-        setFileData(data.files);
+        setFileData((data.files).reverse());
         setLoading(false)
       })
       .catch(error => {
@@ -152,17 +152,14 @@ function Files() {
             </IconButton>
 
             {/* Download Button */}
+            <a href={file.fileUrl} rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
             <IconButton
               color="primary"
-              onClick={() => {
-                const link = document.createElement('a');
-                link.href = file.fileUrl;
-                link.download = file.fileName;
-                link.click();
-              }}
-            >
+              
+            > 
               <GetAppOutlinedIcon />
             </IconButton>
+            </a>
           </CardActions>
         </Card>
       ))

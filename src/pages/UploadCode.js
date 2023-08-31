@@ -67,7 +67,7 @@ function UploadText() {
       <Card>
         <CardContent>
           <TextField
-            label="Data Name"
+            label="Code Name"
             variant="outlined"
             fullWidth
             margin="normal"
@@ -75,7 +75,7 @@ function UploadText() {
             onChange={(e) => setDataName(e.target.value)}
           />
           <TextField
-            label="Data Content"
+            label="Paste Code here"
             variant="outlined"
             fullWidth
             multiline

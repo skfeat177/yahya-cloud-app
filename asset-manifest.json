@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Quick-Share-React/static/css/main.e6c13ad2.css",
+    "main.js": "/Quick-Share-React/static/js/main.86502062.js",
+    "static/js/496.72f260e6.chunk.js": "/Quick-Share-React/static/js/496.72f260e6.chunk.js",
+    "index.html": "/Quick-Share-React/index.html",
+    "main.e6c13ad2.css.map": "/Quick-Share-React/static/css/main.e6c13ad2.css.map",
+    "main.86502062.js.map": "/Quick-Share-React/static/js/main.86502062.js.map",
+    "496.72f260e6.chunk.js.map": "/Quick-Share-React/static/js/496.72f260e6.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.86502062.js"
+  ]
+}

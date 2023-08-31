@@ -24,13 +24,13 @@ function UploadText() {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Assuming you want to send the dataName and dataContent as query parameters
-      const queryParams = `?dataName=${dataName}&dataContent=${dataContent}&dataType=text`;
+      const queryParams = `?dataName=${dataName}&dataType=text`;
 
       // Perform the POST request
       const response = await fetch(`https://quick-share-cors.vercel.app/postdata${queryParams}`, {
         method: 'POST',
         // Assuming 'link' is a variable containing the link you want to send in the request body
-        body: JSON.stringify({ link: 'TEXT DONT HAVE LINKS' }),
+        body: JSON.stringify({ link: dataContent }),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -77,7 +77,7 @@ function UploadText() {
             label="Data Content"
             variant="outlined"
             fullWidth
-            multiline
+            multiline  // Preserves newlines and spaces
             rows={4}
             margin="normal"
             value={dataContent}
@@ -98,10 +98,10 @@ function UploadText() {
         </CardContent>
       </Card>
       <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} open={alertOpen} autoHideDuration={500} onClose={() => setAlertOpen(false)}>
-      <MuiAlert severity={alertSeverity}
-         elevation={6}
-          variant="filled" 
-          onClose={() => setAlertOpen(false)} 
+        <MuiAlert severity={alertSeverity}
+          elevation={6}
+          variant="filled"
+          onClose={() => setAlertOpen(false)}
           sx={{ width: '100%' }}>
           {alertMessage}
         </MuiAlert>
@@ -111,3 +111,8 @@ function UploadText() {
 }
 
 export default UploadText;
+
+
+
+
+

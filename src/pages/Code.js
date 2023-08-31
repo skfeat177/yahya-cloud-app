@@ -51,15 +51,16 @@ function Text() {
 
   const copyToClipboard = (content) => {
     const textArea = document.createElement('textarea');
-    textArea.value = content.replace(/\n/g, ''); // Remove newline characters
+    textArea.value = content; // Do not remove newline characters
     document.body.appendChild(textArea);
     textArea.select();
     document.execCommand('copy');
     document.body.removeChild(textArea);
-
+  
     setSnackbarMessage('Content copied to clipboard.');
     setSnackbarOpen(true);
   };
+  
 
   const handleDelete = async (id) => {
     try {

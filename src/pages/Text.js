@@ -115,14 +115,14 @@ function Text() {
               {new Date(item.postedAt).toLocaleString('en-IN', options)}
               </Typography>
               <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'grey' ,whiteSpace:"pre-line"}}>
-                {item.link}
+                {item.dataContent}
               </Typography>
             </CardContent>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', paddingRight: '20px', gap: 2, marginTop: 'auto', marginBottom: 2 }}>
               <Button startIcon={<DeleteOutlinedIcon />} variant="outlined" color="error" onClick={() => handleDelete(item._id)}>
                 Delete
               </Button>
-              <Button startIcon={<FileCopyOutlinedIcon />} variant="contained" color="primary" onClick={() => copyToClipboard(item.link)}>
+              <Button startIcon={<FileCopyOutlinedIcon />} variant="contained" color="primary" onClick={() => copyToClipboard(item.dataContent)}>
                 Copy
               </Button>
             </Box>

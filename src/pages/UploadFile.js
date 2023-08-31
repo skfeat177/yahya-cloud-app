@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
-import { Alert, Box, Typography, TextField, Snackbar } from '@mui/material'; // Import Snackbar from @mui/material
+import { Alert, Box, Typography, TextField, Snackbar, CircularProgress } from '@mui/material'; // Import Snackbar from @mui/material
 import MuiAlert from '@mui/material/Alert'; // Import MuiAlert from @mui/material
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
@@ -31,7 +31,7 @@ export default function CenteredCard() {
     const [alertOpen, setAlertOpen] = React.useState(false);
     const [alertSeverity, setAlertSeverity] = React.useState('success');
     const [alertMessage, setAlertMessage] = React.useState('');
-
+    const [uploadProgress, setUploadProgress] = React.useState(0);
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         setSelectedFile(file);
@@ -73,36 +73,39 @@ export default function CenteredCard() {
     };
 
 
-    const handleUploadFile = async () => {
+    const handleUploadFile = () => {
         if (selectedFile) {
             setLoading(true);
             const formData = new FormData();
             formData.append('file', selectedFile);
 
-            try {
-                const response = await fetch(`https://quick-share-cors.vercel.app/upload?description=${filedescription}`, {
-                    method: 'POST',
-                    body: formData,
-                });
-                if (response.ok) {
-                    const data = await response.json();
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', `https://cloud-6mhy.onrender.com/upload?description=${filedescription}`);
+            xhr.upload.onprogress = (event) => {
+                const progress = Math.round((event.loaded / event.total) * 100);
+                console.log("Upload Progress:", progress);
+                setUploadProgress(progress);
+            };
+            xhr.onload = () => {
+                if (xhr.status === 200) {
                     setAlertSeverity('success');
                     setAlertMessage('File uploaded successfully.');
-                    const timeoutId = setTimeout(() => {
-                        setAlertOpen(false);
-                    }, 3000);
-                    setAlertTimeout(timeoutId);
                 } else {
                     setAlertSeverity('error');
                     setAlertMessage('An error occurred while uploading the file.');
                 }
-            } catch (error) {
-                setAlertSeverity('error');
-                setAlertMessage('An error occurred while uploading the file.');
-            } finally {
                 setLoading(false);
                 setAlertOpen(true);
-            }
+            };
+            xhr.onerror = (error) => {
+                setAlertSeverity('error');
+                setAlertMessage('An error occurred while uploading the file.');
+                setLoading(false);
+                setAlertOpen(true);
+                console.log(error)
+            };
+
+            xhr.send(formData);
         }
     };
 
@@ -115,57 +118,69 @@ export default function CenteredCard() {
     };
     return (
         <>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                
-        <Card sx={{ width: isMobile ? 325 : 600}}>
-                <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-                 {selectedFile ? getIconForFileType(selectedFile.type) : <InsertDriveFileOutlinedIcon sx={{ fontSize: 90 }} />}
-                    <Typography variant="h6" color="initial" fontWeight="bold">{selectedFile ? selectedFile.name : 'No File Selected'}</Typography>
-                    <Typography variant="h6" color="initial" fontWeight="bold">Size: {selectedFile ? (selectedFile.size / 1024).toFixed(2) : 0.0} KB</Typography>
-                    <TextField id="filedescription" label="File Description" variant="outlined" value={filedescription} onChange={handleDescription}/>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-                        <input
-                            type="file"
-                            accept=".pdf,.zip,.doc,.docx,.js,.css,.html,.java,.py,.cpp,.c,.php,.mp3,.wav,.png,.jpg,.jpeg,.ico"
-                            id="file-input"
-                            style={{ display: 'none' }}
-                            onChange={handleFileChange}
-                        />
-                        <label htmlFor="file-input">
-                            <Button variant="outlined" startIcon={<NoteAddOutlinedIcon/>} color="primary" component="span">
-                                Select
-                            </Button>
-                        </label>
-                        <LoadingButton
-                            color="primary"
-                            onClick={handleUploadFile}
-                            loading={loading}
-                            loadingPosition="start"
-                            variant="contained"
-                            disabled={!selectedFile || loading}
-                            startIcon={<UploadOutlinedIcon />} 
-                        >
-                            <span>Upload</span>
-                        </LoadingButton>
-                    </Box>
-                </CardContent>
-            </Card>
-            <Snackbar
-                open={alertOpen}
-                autoHideDuration={500}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                onClose={handleCloseAlert}
-            >
-                <MuiAlert
-                    elevation={6}
-                    variant="filled"
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+
+                <Card sx={{ width: isMobile ? 325 : 600 }}>
+                    <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+
+                        {loading? (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' ,height:200 ,marginTop:10}}>
+                                <CircularProgress variant="determinate" value={uploadProgress} size={90} />
+                                <Typography variant="h6" color="initial" fontWeight="bold">{uploadProgress}% Uploaded</Typography>
+                            </Box>
+                        ) : (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px'}}>
+                                {selectedFile ? getIconForFileType(selectedFile.type) : <InsertDriveFileOutlinedIcon sx={{ fontSize: 90 }} />}
+                                <Typography variant="h6" color="initial" fontWeight="bold">{selectedFile ? selectedFile.name : 'No File Selected'}</Typography>
+                                <Typography variant="h6" color="initial" fontWeight="bold">Size: {selectedFile ? (selectedFile.size / 1024).toFixed(2) : 0.0} KB</Typography>
+                                <TextField id="filedescription" label="File Description" variant="outlined" value={filedescription} onChange={handleDescription} />
+                            </Box>
+                        )}
+
+                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                            <input
+                                type="file"
+                                accept=".pdf,.zip,.doc,.docx,.js,.css,.html,.java,.py,.cpp,.c,.php,.mp3,.wav,.png,.jpg,.jpeg,.ico"
+                                id="file-input"
+                                style={{ display: 'none' }}
+                                onChange={handleFileChange}
+                            />
+                            <label htmlFor="file-input">
+                                <Button variant="outlined" startIcon={<NoteAddOutlinedIcon />} color="primary" component="span">
+                                    Select
+                                </Button>
+                            </label>
+                            <LoadingButton
+                                color="primary"
+                                onClick={handleUploadFile}
+                                loading={loading}
+                                loadingPosition="start"
+                                variant="contained"
+                                disabled={!selectedFile || loading}
+                                startIcon={<UploadOutlinedIcon />}
+                            >
+                                <span>Upload</span>
+                            </LoadingButton>
+                        </Box>
+                    </CardContent>
+                </Card>
+                <Snackbar
+                    open={alertOpen}
+                    autoHideDuration={1000}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                     onClose={handleCloseAlert}
-                    severity={alertSeverity}
+                    sx={{marginTop:10}}
                 >
-                    {alertMessage}
-                </MuiAlert>
-            </Snackbar>
-        </Box>
+                    <MuiAlert
+                        elevation={6}
+                        variant="filled"
+                        onClose={handleCloseAlert}
+                        severity={alertSeverity}
+                    >
+                        {alertMessage}
+                    </MuiAlert>
+                </Snackbar>
+            </Box>
         </>
     );
 }

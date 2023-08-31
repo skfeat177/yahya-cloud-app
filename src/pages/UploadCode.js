@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { LoadingButton } from '@mui/lab';
 import { FileUploadOutlined } from '@mui/icons-material';
+import Alert from '@mui/material/Alert';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 
@@ -24,13 +25,13 @@ function UploadText() {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Assuming you want to send the dataName and dataContent as query parameters
-      const queryParams = `?dataName=${dataName}&dataContent=${dataContent}&dataType=text`;
+      const queryParams = `?dataName=${dataName}&dataType=code`;
 
       // Perform the POST request
       const response = await fetch(`https://quick-share-cors.vercel.app/postdata${queryParams}`, {
         method: 'POST',
         // Assuming 'link' is a variable containing the link you want to send in the request body
-        body: JSON.stringify({ link: 'TEXT DONT HAVE LINKS' }),
+        body: JSON.stringify({ link: dataContent}),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -38,10 +39,10 @@ function UploadText() {
 
       if (response.ok) {
         setAlertSeverity('success');
-        setAlertMessage('Data posted successfully.');
+        setAlertMessage('Code Uploaded successfully.');
       } else {
         setAlertSeverity('error');
-        setAlertMessage('Unexcepted Error Occured.');
+        setAlertMessage('Unexcepted Error Occured');
       }
     } catch (error) {
       setAlertSeverity('error');
@@ -92,13 +93,13 @@ function UploadText() {
               variant="contained"
               startIcon={<FileUploadOutlined />}
             >
-              <span>Post Data</span>
+              <span>Post Code</span>
             </LoadingButton>
           </Box>
         </CardContent>
       </Card>
       <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} open={alertOpen} autoHideDuration={500} onClose={() => setAlertOpen(false)}>
-      <MuiAlert severity={alertSeverity}
+        <MuiAlert severity={alertSeverity}
          elevation={6}
           variant="filled" 
           onClose={() => setAlertOpen(false)} 

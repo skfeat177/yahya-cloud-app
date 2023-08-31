@@ -4,7 +4,8 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
-import { Alert, Box, Typography, TextField } from '@mui/material';
+import { Alert, Box, Typography, TextField, Snackbar } from '@mui/material'; // Import Snackbar from @mui/material
+import MuiAlert from '@mui/material/Alert'; // Import MuiAlert from @mui/material
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import UploadOutlinedIcon from '@mui/icons-material/UploadOutlined';
@@ -22,6 +23,7 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 
 export default function CenteredCard() {
     const theme = useTheme();
+    const [alertTimeout, setAlertTimeout] = React.useState(null);
     const [selectedFile, setSelectedFile] = React.useState(null);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [loading, setLoading] = React.useState(false);
@@ -86,6 +88,10 @@ export default function CenteredCard() {
                     const data = await response.json();
                     setAlertSeverity('success');
                     setAlertMessage('File uploaded successfully.');
+                    const timeoutId = setTimeout(() => {
+                        setAlertOpen(false);
+                    }, 3000);
+                    setAlertTimeout(timeoutId);
                 } else {
                     setAlertSeverity('error');
                     setAlertMessage('An error occurred while uploading the file.');
@@ -101,21 +107,19 @@ export default function CenteredCard() {
     };
 
     const handleCloseAlert = () => {
+        // Clear the timeout when the alert is manually closed
+        if (alertTimeout) {
+            clearTimeout(alertTimeout);
+        }
         setAlertOpen(false);
     };
-
     return (
         <>
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
                 
         <Card sx={{ width: isMobile ? 325 : 600}}>
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-                {alertOpen && (
-                <Alert sx={{marginBottom:2,marginTop:2,width:"100%"}} onClose={handleCloseAlert} severity={alertSeverity}>
-                    {alertMessage}
-                </Alert>
-            )}
-                    {selectedFile ? getIconForFileType(selectedFile.type) : <InsertDriveFileOutlinedIcon sx={{ fontSize: 90 }} />}
+                 {selectedFile ? getIconForFileType(selectedFile.type) : <InsertDriveFileOutlinedIcon sx={{ fontSize: 90 }} />}
                     <Typography variant="h6" color="initial" fontWeight="bold">{selectedFile ? selectedFile.name : 'No File Selected'}</Typography>
                     <Typography variant="h6" color="initial" fontWeight="bold">Size: {selectedFile ? (selectedFile.size / 1024).toFixed(2) : 0.0} KB</Typography>
                     <TextField id="filedescription" label="File Description" variant="outlined" value={filedescription} onChange={handleDescription}/>
@@ -128,7 +132,7 @@ export default function CenteredCard() {
                             onChange={handleFileChange}
                         />
                         <label htmlFor="file-input">
-                            <Button variant="outlined"  startIcon={<NoteAddOutlinedIcon/>} color="primary" component="span">
+                            <Button variant="outlined" startIcon={<NoteAddOutlinedIcon/>} color="primary" component="span">
                                 Select
                             </Button>
                         </label>
@@ -146,7 +150,21 @@ export default function CenteredCard() {
                     </Box>
                 </CardContent>
             </Card>
-        
+            <Snackbar
+                open={alertOpen}
+                autoHideDuration={500}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                onClose={handleCloseAlert}
+            >
+                <MuiAlert
+                    elevation={6}
+                    variant="filled"
+                    onClose={handleCloseAlert}
+                    severity={alertSeverity}
+                >
+                    {alertMessage}
+                </MuiAlert>
+            </Snackbar>
         </Box>
         </>
     );

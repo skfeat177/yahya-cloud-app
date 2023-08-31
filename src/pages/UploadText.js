@@ -24,13 +24,13 @@ function UploadText() {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Assuming you want to send the dataName and dataContent as query parameters
-      const queryParams = `?dataName=${dataName}&dataType=link`;
+      const queryParams = `?dataName=${dataName}&dataContent=${dataContent}dataType=text`;
 
       // Perform the POST request
       const response = await fetch(`https://quick-share-cors.vercel.app/postdata${queryParams}`, {
         method: 'POST',
         // Assuming 'link' is a variable containing the link you want to send in the request body
-        body: JSON.stringify({ link: dataContent }),
+        body: JSON.stringify({ link: 'null' }),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -38,10 +38,10 @@ function UploadText() {
 
       if (response.ok) {
         setAlertSeverity('success');
-        setAlertMessage('Link Uploaded successfully.');
+        setAlertMessage('Data posted successfully.');
       } else {
         setAlertSeverity('error');
-        setAlertMessage('Unexcepted Error Occured');
+        setAlertMessage('Unexcepted Error Occured.');
       }
     } catch (error) {
       setAlertSeverity('error');
@@ -62,12 +62,11 @@ function UploadText() {
       justifyContent="center"
       alignItems="center"
       minHeight="100vh"
-      sx={{marginInline:"15px"}}
     >
       <Card>
         <CardContent>
           <TextField
-            label="Link Name"
+            label="Data Name"
             variant="outlined"
             fullWidth
             margin="normal"
@@ -75,9 +74,11 @@ function UploadText() {
             onChange={(e) => setDataName(e.target.value)}
           />
           <TextField
-            label="Link Content"
+            label="Data Content"
             variant="outlined"
             fullWidth
+            multiline  // Preserves newlines and spaces
+            rows={4}
             margin="normal"
             value={dataContent}
             onChange={(e) => setDataContent(e.target.value)}
@@ -91,16 +92,16 @@ function UploadText() {
               variant="contained"
               startIcon={<FileUploadOutlined />}
             >
-              <span>Post Link</span>
+              <span>Post Data</span>
             </LoadingButton>
           </Box>
         </CardContent>
       </Card>
       <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={alertOpen} autoHideDuration={1000} onClose={() => setAlertOpen(false)}   sx={{marginTop:10}}>
-      <MuiAlert severity={alertSeverity}
-         elevation={6}
-          variant="filled" 
-          onClose={() => setAlertOpen(false)} 
+        <MuiAlert severity={alertSeverity}
+          elevation={6}
+          variant="filled"
+          onClose={() => setAlertOpen(false)}
           sx={{ width: '100%' }}>
           {alertMessage}
         </MuiAlert>
@@ -110,3 +111,8 @@ function UploadText() {
 }
 
 export default UploadText;
+
+
+
+
+

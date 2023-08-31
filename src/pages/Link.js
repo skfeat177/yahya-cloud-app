@@ -42,7 +42,7 @@ function Text() {
     document.execCommand('copy');
     document.body.removeChild(textArea);
 
-    setSnackbarMessage('Content copied to clipboard.');
+    setSnackbarMessage('Link copied to clipboard.');
     setSnackbarOpen(true);
   };
 
@@ -135,9 +135,10 @@ function Text() {
       )}
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={500}
+        autoHideDuration={1000}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         onClose={() => setSnackbarOpen(false)}
+        sx={{marginBottom:7}}
       >
         <Alert
           elevation={6}

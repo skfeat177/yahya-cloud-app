@@ -81,7 +81,7 @@ export default function CenteredCard() {
             formData.append('file', selectedFile);
 
             const xhr = new XMLHttpRequest();
-            xhr.open('POST', `https://cloud-6mhy.onrender.com/upload?description=${filedescription}`);
+            xhr.open('POST', `https://quick-share-cors.vercel.app/upload?description=${filedescription}`);
             xhr.upload.onprogress = (event) => {
                 const progress = Math.round((event.loaded / event.total) * 100);
                 console.log("Upload Progress:", progress);

@@ -24,13 +24,13 @@ function UploadText() {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Assuming you want to send the dataName and dataContent as query parameters
-      const queryParams = `?dataName=${dataName}&dataType=text`;
+      const queryParams = `?dataName=${dataName}&dataContent=${dataContent}dataType=text`;
 
       // Perform the POST request
       const response = await fetch(`https://quick-share-cors.vercel.app/postdata${queryParams}`, {
         method: 'POST',
         // Assuming 'link' is a variable containing the link you want to send in the request body
-        body: JSON.stringify({ link: dataContent }),
+        body: JSON.stringify({ link: 'null' }),
         headers: {
           'Content-Type': 'application/json'
         }

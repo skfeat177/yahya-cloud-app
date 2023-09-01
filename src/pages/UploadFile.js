@@ -125,7 +125,7 @@ export default function CenteredCard() {
             };
             xhr.onerror = () => {
                 setAlertSeverity('error');
-                setAlertMessage('An error occurred while uploading the file.');
+                setAlertMessage('Server error occurred');
                 setLoading(false);
                 setAlertOpen(true);
             };
@@ -151,8 +151,8 @@ export default function CenteredCard() {
 
                         {loading ? (
                             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', height: 250, marginTop: 10 }}>
-                                <CircularProgress variant="determinate" value={uploadProgress} size={120} thickness={5}/>
-                                <Typography variant="h6" color="initial" fontWeight="bold">{uploadProgress}% Uploaded</Typography>
+                                <CircularProgress variant="determinate" value={uploadProgress} size={150} thickness={5}/>
+                                <Typography variant="h5" color="initial" fontWeight="bold">{uploadProgress}% Uploaded</Typography>
                             </Box>
                         ) : (
                             <>

@@ -53,7 +53,7 @@ function Text() {
       });
 
       if (response.ok) {
-        setSnackbarMessage('Data deleted successfully.');
+        setSnackbarMessage('Text deleted successfully.');
         setSnackbarOpen(true);
         fetchData(); // Refresh data
         console.log(data)

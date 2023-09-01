@@ -57,7 +57,7 @@ function Text() {
     document.execCommand('copy');
     document.body.removeChild(textArea);
   
-    setSnackbarMessage('Code Snippe copied to clipboard.');
+    setSnackbarMessage('Code Snippet copied to clipboard.');
     setSnackbarOpen(true);
   };
   
@@ -69,7 +69,7 @@ function Text() {
       });
 
       if (response.ok) {
-        setSnackbarMessage('Data deleted successfully.');
+        setSnackbarMessage('Code Snippet deleted successfully.');
         setSnackbarOpen(true);
         fetchData();
       }

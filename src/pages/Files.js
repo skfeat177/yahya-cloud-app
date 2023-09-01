@@ -46,7 +46,7 @@ function Files() {
     })
     .then(response => response.json())
     .then(data => {
-      setSnackbarMessage(data.message);
+      setSnackbarMessage('File deleted successfully');
       setSnackbarOpen(true);
       // Update file list by filtering out the deleted file
       setFileData(prevFileData => prevFileData.filter(file => file._id !== fileId));

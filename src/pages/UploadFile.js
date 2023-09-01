@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
-import { Alert, Box, Typography, TextField, Snackbar, CircularProgress } from '@mui/material'; // Import Snackbar from @mui/material
+import { Box, Typography, TextField, Snackbar, CircularProgress, Radio, RadioGroup, FormControlLabel } from '@mui/material'; // Import Snackbar from @mui/material
 import MuiAlert from '@mui/material/Alert'; // Import MuiAlert from @mui/material
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
@@ -32,11 +32,29 @@ export default function CenteredCard() {
     const [alertSeverity, setAlertSeverity] = React.useState('success');
     const [alertMessage, setAlertMessage] = React.useState('');
     const [uploadProgress, setUploadProgress] = React.useState(0);
+    const [selectedServer, setSelectedServer] = React.useState('vercel');
+    const [serverStatus, setServerStatus] = React.useState('Not Ready');
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         setSelectedFile(file);
     };
+    const handleServerChange = (event) => {
+        setSelectedServer(event.target.value);
+    };
+    React.useEffect(() => {
+        const fetchServerStatus = async () => {
+            try {
+                const response = await fetch("https://cloud-6mhy.onrender.com");
+                if (response.status === 200) {
+                    setServerStatus('Ready');
+                }
+            } catch (error) {
+                setServerStatus('Pending');
+            }
+        };
 
+        fetchServerStatus();
+    }, []);
     const handleDescription = (event) => {
         const file = event.target.value;
         setfiledescription(file);
@@ -73,6 +91,14 @@ export default function CenteredCard() {
     };
 
 
+    const getApiUrl = () => {
+        if (selectedServer === 'vercel') {
+            return 'https://quick-share-cors.vercel.app';
+        } else {
+            return 'https://cloud-6mhy.onrender.com';
+        }
+    };
+
     const handleUploadFile = () => {
         if (selectedFile) {
             setLoading(true);
@@ -81,10 +107,9 @@ export default function CenteredCard() {
             formData.append('file', selectedFile);
 
             const xhr = new XMLHttpRequest();
-            xhr.open('POST', `https://quick-share-cors.vercel.app/upload?description=${filedescription}`);
+            xhr.open('POST', `${getApiUrl()}/upload?description=${filedescription}`);
             xhr.upload.onprogress = (event) => {
                 const progress = Math.round((event.loaded / event.total) * 100);
-                console.log("Upload Progress:", progress);
                 setUploadProgress(progress);
             };
             xhr.onload = () => {
@@ -98,12 +123,11 @@ export default function CenteredCard() {
                 setLoading(false);
                 setAlertOpen(true);
             };
-            xhr.onerror = (error) => {
+            xhr.onerror = () => {
                 setAlertSeverity('error');
                 setAlertMessage('An error occurred while uploading the file.');
                 setLoading(false);
                 setAlertOpen(true);
-                console.log(error)
             };
 
             xhr.send(formData);
@@ -117,26 +141,54 @@ export default function CenteredCard() {
         }
         setAlertOpen(false);
     };
+    const statusColor = serverStatus === 'Ready' ? 'green' : 'red';
     return (
         <>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-
                 <Card sx={{ width: isMobile ? 325 : 600 }}>
                     <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
 
-                        {loading? (
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' ,height:200 ,marginTop:10}}>
-                                <CircularProgress variant="determinate" value={uploadProgress} size={90} />
+
+                        {loading ? (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', height: 250, marginTop: 10 }}>
+                                <CircularProgress variant="determinate" value={uploadProgress} size={120} thickness={5}/>
                                 <Typography variant="h6" color="initial" fontWeight="bold">{uploadProgress}% Uploaded</Typography>
                             </Box>
                         ) : (
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px'}}>
-                                {selectedFile ? getIconForFileType(selectedFile.type) : <InsertDriveFileOutlinedIcon sx={{ fontSize: 90 }} />}
-                                <Typography variant="h6" color="initial" fontWeight="bold">{selectedFile ? selectedFile.name : 'No File Selected'}</Typography>
-                                <Typography variant="h6" color="initial" fontWeight="bold">Size: {selectedFile ? (selectedFile.size / 1024).toFixed(2) : 0.0} KB</Typography>
-                                <TextField id="filedescription" label="File Description" variant="outlined" value={filedescription} onChange={handleDescription} />
-                            </Box>
+                            <>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                                    {selectedFile ? getIconForFileType(selectedFile.type) : <InsertDriveFileOutlinedIcon sx={{ fontSize: 90 }} />}
+                                    <Typography variant="h6" color="initial" fontWeight="bold">{selectedFile ? selectedFile.name : 'No File Selected'}</Typography>
+                                    <Typography variant="body1" color="initial" fontWeight="bold">Size: {selectedFile ? (selectedFile.size / 1024).toFixed(2) : 0.0} KB</Typography>
+                                    <TextField size='small' id="filedescription" label="File Description" variant="outlined" sx={{width:300,marginBottom:-2,marginTop:1}} value={filedescription} onChange={handleDescription} />
+                                </Box>
+                                <RadioGroup
+                                    row
+                                    aria-label="server"
+                                    name="server"
+                                    value={selectedServer}
+                                    onChange={handleServerChange}
+                           
+                                >
+                                    <FormControlLabel
+                                        value="vercel"
+                                        control={<Radio color="primary" />}
+                                        label="Vercel"
+
+                                    />
+                                    <FormControlLabel
+                                        value="render"
+                                        control={<Radio color="primary" />}
+                                        label="Render"
+                                    />
+                                </RadioGroup>
+                                <Typography variant="body1" color="initial" style={{ fontWeight: 'bold' }}
+                                         sx={{marginTop:-2}}>
+                                    Render Server Status: <span style={{color: statusColor}}>{serverStatus}</span>
+                                </Typography>
+                            </>
                         )}
+
 
                         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
                             <input
@@ -150,8 +202,7 @@ export default function CenteredCard() {
                                 <Button variant="outlined" startIcon={<NoteAddOutlinedIcon />} color="primary" component="span">
                                     Select
                                 </Button>
-                            </label>
-                            <LoadingButton
+                            </label><LoadingButton
                                 color="primary"
                                 onClick={handleUploadFile}
                                 loading={loading}
@@ -167,10 +218,10 @@ export default function CenteredCard() {
                 </Card>
                 <Snackbar
                     open={alertOpen}
-                    autoHideDuration={1000}
+                    autoHideDuration={2000}
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                     onClose={handleCloseAlert}
-                    sx={{marginTop:10}}
+                    sx={{ marginTop: 10 }}
                 >
                     <MuiAlert
                         elevation={6}

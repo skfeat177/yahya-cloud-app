@@ -81,22 +81,20 @@ function Text() {
     setSnackbarOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    setSnackbarMessage('Code Snippet deleted successfully.');
-    setSnackbarOpen(true);
-  
-    try {
-      const response = await fetch(`https://quick-share-cors.vercel.app/deletedata?id=${id}`, {
-        method: 'DELETE',
-      });
-  
-      if (response.ok) {
-        // Refresh data after a successful delete
-        fetchData();
-      }
-    } catch (error) {
-      console.error('Error deleting data:', error);
-    }
+  const handleDelete = (fileId) => {
+    fetch(`https://quick-share-cors.vercel.app/deletedata?id=${fileId}`, {
+      method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(data => {
+      setSnackbarMessage(data.message);
+      setSnackbarOpen(true);
+      // Update file list by filtering out the deleted file
+      setData(prevFileData => prevFileData.filter(file => file._id !== fileId));
+    })
+    .catch(error => {
+      console.error('Error deleting file:', error);
+    });
   };
   
 
@@ -105,7 +103,7 @@ function Text() {
       ref={containerRef}
       style={{
         marginInline: '10px',
-        marginTop: '90px',
+        marginTop: '80px',
         marginBottom: '90px',
         display: 'flex',
         justifyContent: 'flex-start',
@@ -137,7 +135,7 @@ function Text() {
   style={{display:'flex',justifyContent:'center' ,flexDirection:'column',marginInline:'auto'}}
 >
   {data.map((item) => (
-        <Card key={item._id} sx={{ width: '99%', display: 'flex', flexDirection: 'column', marginBottom: '20px',marginInline:'auto',boxSizing:'border-box'}} elevation={5}>
+        <Card key={item._id} sx={{ width: '99%', display: 'flex', flexDirection: 'column', marginBottom: '20px',marginInline:'auto',boxSizing:'border-box'}} elevation={4}>
         <CardContent>
           <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
             {item.dataName}
@@ -203,8 +201,8 @@ function Text() {
 
 function SkeletonLoader() {
   return (
-    <Box sx={{ width: '99%', marginBottom: '20px',marginInline:'auto'}}>
-    <Card sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
+    <Box sx={{ width: '100%', marginBottom: '20px',marginInline:'auto'}}>
+    <Box sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
       <CardContent>
         <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
           <Skeleton variant="text" width="50%" />
@@ -216,8 +214,8 @@ function SkeletonLoader() {
           <Skeleton variant="rectangular" height={80} />
         </Typography>
       </CardContent>
-    </Card>
-    <Card sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
+    </Box>
+    <Box sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
       <CardContent>
         <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
           <Skeleton variant="text" width="50%" />
@@ -229,8 +227,8 @@ function SkeletonLoader() {
           <Skeleton variant="rectangular" height={80} />
         </Typography>
       </CardContent>
-    </Card>
-    <Card sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
+    </Box>
+    <Box sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
       <CardContent>
         <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
           <Skeleton variant="text" width="50%" />
@@ -242,7 +240,7 @@ function SkeletonLoader() {
           <Skeleton variant="rectangular" height={80} />
         </Typography>
       </CardContent>
-    </Card>
+    </Box>
     </Box>
   );
 }

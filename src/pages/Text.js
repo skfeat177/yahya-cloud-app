@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
-import { Box, Snackbar, Alert, Skeleton ,TextField} from '@mui/material';
+import { Box, Snackbar, Alert, Skeleton, CircularProgress } from '@mui/material';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { okaidia } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 function Text() {
   const [data, setData] = useState([]);
@@ -13,24 +20,52 @@ function Text() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const [page, setPage] = useState(1); 
+  const [hasMore,setHasMore] = useState(true)
 
-  const filteredData = data.filter(item =>
-    item.dataName.toLowerCase().includes(searchInput.toLowerCase())
-  );
+  const containerRef = useRef(null);
 
   const fetchData = async () => {
     try {
-      const response = await fetch('https://quick-share-cors.vercel.app/getalldata');
+      const response = await fetch(`https://quick-share-cors.vercel.app/getlimiteddata?count=3&type=text&page=${page}`);
       if (response.ok) {
         const responseData = await response.json();
-        // Filter and reverse the text data
-        const textData = responseData.files.filter(item => item.dataType === 'text').reverse();
-        setData(textData);
+        if (page === 1) {
+          // If it's the first page, replace the existing data
+          setData(responseData);
+        } else {
+          // If it's not the first page, append the new data
+          setData(prevData => [...prevData, ...responseData]);
+        }
+      } else {
+        // Handle other response status codes as needed
+        if (response.status === 404) {
+          setHasMore(false);
+        }
       }
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
-      setLoading(false);
+      setLoading(false); // Data is loaded or if there's an error, set loading to false
+    }
+  };
+  
+  const handleLoadMore = () => {
+    setPage(prevPage => prevPage + 1); // Load the next page when the "Load More" button is clicked
+  };
+
+  useEffect(() => {
+    fetchData(); // Fetch data when the component mounts or when the page changes
+  }, [page]);
+
+  const handleScroll = () => {
+    if (
+      containerRef.current &&
+      window.innerHeight + window.scrollY >= containerRef.current.offsetHeight - 100 &&
+      data.length > 0
+    ) {
+      // Load more data when the user is near the bottom
+      setPage(prevPage => prevPage + 1);
     }
   };
 
@@ -46,95 +81,102 @@ function Text() {
     setSnackbarOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await fetch(`https://quick-share-cors.vercel.app/deletedata?id=${id}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        setSnackbarMessage('Text deleted successfully.');
-        setSnackbarOpen(true);
-        fetchData(); // Refresh data
-        console.log(data)
-      }
-    } catch (error) {
-      console.error('Error deleting data:', error);
-    }
+  const handleDelete = (fileId) => {
+    fetch(`https://quick-share-cors.vercel.app/deletedata?id=${fileId}`, {
+      method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(data => {
+      setSnackbarMessage(data.message);
+      setSnackbarOpen(true);
+      // Update file list by filtering out the deleted file
+      setData(prevFileData => prevFileData.filter(file => file._id !== fileId));
+    })
+    .catch(error => {
+      console.error('Error deleting file:', error);
+    });
   };
-  const options = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    timeZone: 'Asia/Kolkata',
-    hour12: true,
-  };
-  useEffect(() => {
-    fetchData();
-  }, [handleDelete]);
 
   return (
-    <div style={{ marginInline: '10px', marginTop: '90px', marginBottom: '90px', display: 'flex', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
-              <TextField
-        label="Search"
-        variant="outlined"
-        size="small"
-        style={{ marginBottom: '20px', width: '100%' }}
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-      />
+    <div
+      ref={containerRef}
+      style={{
+        marginInline: '10px',
+        marginTop: '90px',
+        marginBottom: '90px',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        flexWrap: 'wrap',
+        overflowX: 'hidden', // Add this to prevent horizontal overflow
+      }}
+      onScroll={handleScroll}
+    >
       {loading ? (
-        // Skeleton loading while data is being fetched
-        Array.from({ length: 3 }).map((_, index) => (
-          <Card key={index} sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
-            <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
-                <Skeleton variant="text" width="50%" />
-              </Typography>
-              <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                <Skeleton variant="text" width="20%" />
-              </Typography>
-              <Typography variant="body1" sx={{ marginBottom: 2 }}>
-                <Skeleton variant="rectangular" height={80} />
-              </Typography>
-            </CardContent>
-          </Card>
-        ))
+        <SkeletonLoader/>
       ) : (
-        // Display data cards
-        filteredData.map((item) => (
-          <Card key={item._id} sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginBottom: '20px' }} elevation={3}>
-            <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
-                {item.dataName}
-              </Typography>
-              <Typography variant="body1" sx={{ marginBottom: 1, color: 'darkgrey' }}>
-              {new Date(item.postedAt).toLocaleString('en-IN', options)}
-              </Typography>
-              <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'grey' ,whiteSpace:"pre-line"}}>
-                {item.dataContent}
-              </Typography>
-            </CardContent>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', paddingRight: '20px', gap: 2, marginTop: 'auto', marginBottom: 2 }}>
-              <Button startIcon={<DeleteOutlinedIcon />} variant="outlined" color="error" onClick={() => handleDelete(item._id)}>
-                Delete
-              </Button>
-              <Button startIcon={<FileCopyOutlinedIcon />} variant="contained" color="primary" onClick={() => copyToClipboard(item.dataContent)}>
-                Copy
-              </Button>
-            </Box>
-          </Card>
-        ))
+        <Box sx={{width:'100%',height:'100%'}}>
+<InfiniteScroll
+  dataLength={data.length}
+  next={handleLoadMore}
+  hasMore={hasMore} 
+  loader={
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80px'}}>
+      <CircularProgress thickness={6} size={35}/>     <p style={{ fontSize:25,marginLeft:'10px',color:'grey' }}>
+      <b>Loading..</b>
+    </p>
+    </div>
+  }
+  endMessage={
+    <p style={{ textAlign: 'center',fontSize:20 }}>
+      <b>No more data to load</b>
+    </p>
+  }
+  style={{display:'flex',justifyContent:'center' ,flexDirection:'column',marginInline:'auto'}}
+>
+  {data.map((item) => (
+        <Card key={item._id} sx={{ width: '99%', display: 'flex', flexDirection: 'column', marginBottom: '20px',marginInline:'auto',boxSizing:'border-box'}} elevation={4}>
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+            {item.dataName}
+          </Typography>
+          <Typography variant="body1" sx={{ marginBottom: 1, color: 'darkgrey' }}>
+            {new Date(item.postedAt).toLocaleString('en-IN', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: 'numeric',
+              minute: 'numeric',
+              second: 'numeric',
+              timeZone: 'Asia/Kolkata',
+              hour12: true,
+            })}
+          </Typography>
+              <div style={{ width: '100%' }}>
+                <SyntaxHighlighter language="javascript" style={okaidia}>
+                  {item.dataContent}
+                </SyntaxHighlighter>
+              </div>
+        </CardContent>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', paddingRight: '20px', gap: 2, marginTop: 'auto', marginBottom: 2 }}>
+          <Button startIcon={<DeleteOutlinedIcon />} variant="outlined" color="error" onClick={() => handleDelete(item._id)}>
+            Delete
+          </Button>
+          <Button startIcon={<FileCopyOutlinedIcon />} variant="contained" color="primary" onClick={() => copyToClipboard(item.dataContent)}>
+            Copy
+          </Button>
+        </Box>
+      </Card>
+  ))}
+</InfiniteScroll>
+</Box>
+
       )}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={1000}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         onClose={() => setSnackbarOpen(false)}
-        sx={{marginBottom:7}}
+        sx={{ marginBottom: 7 }}
       >
         <Alert
           elevation={6}
@@ -146,6 +188,52 @@ function Text() {
         </Alert>
       </Snackbar>
     </div>
+  );
+}
+
+function SkeletonLoader() {
+  return (
+    <Box sx={{ width: '99%', marginBottom: '20px',marginInline:'auto'}}>
+    <Card sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
+      <CardContent>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+          <Skeleton variant="text" width="50%" />
+        </Typography>
+        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+          <Skeleton variant="text" width="20%" />
+        </Typography>
+        <Typography variant="body1" sx={{ marginBottom: 2 }}>
+          <Skeleton variant="rectangular" height={80} />
+        </Typography>
+      </CardContent>
+    </Card>
+    <Card sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
+      <CardContent>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+          <Skeleton variant="text" width="50%" />
+        </Typography>
+        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+          <Skeleton variant="text" width="20%" />
+        </Typography>
+        <Typography variant="body1" sx={{ marginBottom: 2 }}>
+          <Skeleton variant="rectangular" height={80} />
+        </Typography>
+      </CardContent>
+    </Card>
+    <Card sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
+      <CardContent>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+          <Skeleton variant="text" width="50%" />
+        </Typography>
+        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+          <Skeleton variant="text" width="20%" />
+        </Typography>
+        <Typography variant="body1" sx={{ marginBottom: 2 }}>
+          <Skeleton variant="rectangular" height={80} />
+        </Typography>
+      </CardContent>
+    </Card>
+    </Box>
   );
 }
 

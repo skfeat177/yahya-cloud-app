@@ -26,7 +26,7 @@ import { Link } from 'react-router-dom';
 const drawerWidth = 240;
 const navItems = [
   { label: 'Upload File', link:"/upload-file",icon: <InsertDriveFileOutlinedIcon /> },
-  { label: 'Upload Code Snippet',link:"/upload-code", icon: <CodeOutlinedIcon /> },
+  { label: 'Upload Code',link:"/upload-code", icon: <CodeOutlinedIcon /> },
   { label: 'Upload Text',link:"upload-text", icon: <TextSnippetOutlinedIcon /> },
   { label: 'Upload Link',link:"upload-link", icon: <LinkOutlinedIcon /> },
 ];
@@ -53,7 +53,7 @@ function DrawerAppBar(props) {
         {navItems.map((item) => (
     <ListItem key={item.label} disablePadding>
     <Link to={item.link} style={{ textDecoration: 'none' }}>
-      <ListItemButton sx={{ textAlign: 'left' }}>
+      <ListItemButton sx={{ textAlign: 'left',paddingRight:11 }}>
         <ListItemIcon>{item.icon}</ListItemIcon>
         <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontWeight: 'bold', color: 'grey', marginLeft: -2 } }} />
       </ListItemButton>

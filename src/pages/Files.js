@@ -138,72 +138,79 @@ function Files() {
     <div
       ref={containerRef}
       style={{
-        marginInline: 'auto',
-        marginTop: '90px',
-        marginBottom: '90px',
+        marginTop: '80px',
         display: 'flex',
-        justifyContent: 'flex-start',
+        justifyContent: 'center', // Center horizontally
         flexWrap: 'wrap',
-        overflowX: 'hidden', // Add this to prevent horizontal overflow
+        overflowX: 'hidden',
+        width: '100%',
       }}
       onScroll={handleScroll}
     >
       {loading ? (
-        <SkeletonLoader/>
+        <SkeletonLoader />
       ) : (
-        <Box sx={{width:'100%',height:'100%'}}>
-<InfiniteScroll
-  dataLength={fileData.length}
-  next={() => setPage((prevPage) => prevPage + 1)}
-  hasMore={hasMore}
-  loader={
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80px'}}>
-      <CircularProgress thickness={6} size={35}/>     <p style={{ fontSize:25,marginLeft:'10px',color:'grey' }}>
-      <b>Loading..</b>
-    </p>
-    </div>
-  }
-  endMessage={
-    <p style={{ textAlign: 'center',fontSize:20 }}>
-      <b>No more data to load</b>
-    </p>
-  }
-  style={{display:'flex',justifyContent:'center' ,flexDirection:'column',marginInline:'auto'}}
->
-{fileData.map((file) => (
-  <div style={{width:"100%",marginInline:'auto'}}>
-    <Card key={file._id} sx={{ width: '98%', display: 'flex', alignItems: 'center', marginBottom: '10px' ,justfySelf:'center',marginLeft:'13px'}} elevation={3} >
-      <CardContent sx={{ width: '100%' }}>
-        <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'black', width: '100%' }}>
-          {file.fileDescription}
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {getIconForFileType(file.fileType)}
-          <Box sx={{ marginLeft: 2 }}>
-            <Typography variant="body2" sx={{ color: 'grey' }}>{new Date(file.uploadedDate).toLocaleString('en-IN', options)}</Typography>
-            <Typography variant="body2" sx={{ color: 'grey' }}>{(file.fileSize / 1024).toFixed(2)} KB</Typography>
-          </Box>
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            marginInline: 'auto',
+            display: 'flex',
+            justifyContent: 'center', // Center horizontally
+            flexDirection: 'column',
+          }}
+        >
+          <InfiniteScroll
+            dataLength={fileData.length}
+            next={() => setPage((prevPage) => prevPage + 1)}
+            hasMore={hasMore}
+            loader={
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80px', marginBottom: '100px' }}>
+                <CircularProgress thickness={6} size={35} /> <p style={{ fontSize: 25, marginLeft: '10px', color: 'grey' }}>
+                  <b>Loading..</b>
+                </p>
+              </div>
+            }
+            endMessage={
+              <p style={{ textAlign: 'center', fontSize: 20, marginBottom: '100px' }}>
+                <b>No more data to load</b>
+              </p>
+            }
+            style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', marginInline: 'auto' }}
+          >
+            {fileData.map((file) => (
+              <div style={{ width: "100%", marginInline: 'auto', marginBottom: 4 }}>
+                <Card key={file._id} sx={{ width: '98%', display: 'flex', alignItems: 'center', margin: '0 auto', marginBottom: '10px', justfySelf: 'center' }} elevation={3}>
+                  <CardContent sx={{ width: '100%' }}>
+                    <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'black', width: '100%' }}>
+                      {file.fileDescription}
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      {getIconForFileType(file.fileType)}
+                      <Box sx={{ marginLeft: 2 }}>
+                        <Typography variant="body2" sx={{ color: 'grey' }}>{new Date(file.uploadedDate).toLocaleString('en-IN', options)}</Typography>
+                        <Typography variant="body2" sx={{ color: 'grey' }}>{(file.fileSize / 1024).toFixed(2)} KB</Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                  <CardActions>
+                    {/* Delete Button */}
+                    <IconButton color="error" onClick={() => handleDeleteClick(file._id)}>
+                      <DeleteOutlinedIcon />
+                    </IconButton>
+  
+                    {/* Download Button */}
+                    <a href={file.fileUrl} rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                      <IconButton color="primary">
+                        <GetAppOutlinedIcon />
+                      </IconButton>
+                    </a>
+                  </CardActions>
+                </Card>
+              </div>
+            ))}
+          </InfiniteScroll>
         </Box>
-      </CardContent>
-      <CardActions>
-        {/* Delete Button */}
-        <IconButton color="error" onClick={() => handleDeleteClick(file._id)}>
-          <DeleteOutlinedIcon />
-        </IconButton>
-
-        {/* Download Button */}
-        <a href={file.fileUrl} rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-          <IconButton color="primary">
-            <GetAppOutlinedIcon />
-          </IconButton>
-        </a>
-      </CardActions>
-    </Card>
-    </div>
-  ))}
-</InfiniteScroll>
-</Box>
-
       )}
       <Snackbar
         open={snackbarOpen}
@@ -223,12 +230,13 @@ function Files() {
       </Snackbar>
     </div>
   );
+  
 }
 
 function SkeletonLoader() {
   return (
-    Array.from({ length: 5 }).map((_, index) => (
-        <Card key={index} sx={{ width: '98%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px',marginLeft:'14px' }} elevation={3}>
+    <>
+               <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
           <CardContent>
             <Typography variant="body1">
               <Skeleton width={'100%'} />
@@ -253,8 +261,112 @@ function SkeletonLoader() {
               <GetAppOutlinedIcon />
             </IconButton>
           </CardActions>
-        </Card>
-      ))
+        </Box>
+               <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
+          <CardContent>
+            <Typography variant="body1">
+              <Skeleton width={'100%'} />
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Skeleton variant="circle" width={65} height={65} />
+              <Box sx={{ marginLeft: 2 }}>
+                <Typography variant="body2">
+                  <Skeleton width={100} />
+                </Typography>
+                <Typography variant="body2">
+                  <Skeleton width={60} />
+                </Typography>
+              </Box>
+            </Box>
+          </CardContent>
+          <CardActions>
+            <IconButton disabled>
+              <DeleteOutlinedIcon />
+            </IconButton>
+            <IconButton disabled>
+              <GetAppOutlinedIcon />
+            </IconButton>
+          </CardActions>
+        </Box>
+               <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
+          <CardContent>
+            <Typography variant="body1">
+              <Skeleton width={'100%'} />
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Skeleton variant="circle" width={65} height={65} />
+              <Box sx={{ marginLeft: 2 }}>
+                <Typography variant="body2">
+                  <Skeleton width={100} />
+                </Typography>
+                <Typography variant="body2">
+                  <Skeleton width={60} />
+                </Typography>
+              </Box>
+            </Box>
+          </CardContent>
+          <CardActions>
+            <IconButton disabled>
+              <DeleteOutlinedIcon />
+            </IconButton>
+            <IconButton disabled>
+              <GetAppOutlinedIcon />
+            </IconButton>
+          </CardActions>
+        </Box>
+               <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
+          <CardContent>
+            <Typography variant="body1">
+              <Skeleton width={'100%'} />
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Skeleton variant="circle" width={65} height={65} />
+              <Box sx={{ marginLeft: 2 }}>
+                <Typography variant="body2">
+                  <Skeleton width={100} />
+                </Typography>
+                <Typography variant="body2">
+                  <Skeleton width={60} />
+                </Typography>
+              </Box>
+            </Box>
+          </CardContent>
+          <CardActions>
+            <IconButton disabled>
+              <DeleteOutlinedIcon />
+            </IconButton>
+            <IconButton disabled>
+              <GetAppOutlinedIcon />
+            </IconButton>
+          </CardActions>
+        </Box>
+               <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
+          <CardContent>
+            <Typography variant="body1">
+              <Skeleton width={'100%'} />
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Skeleton variant="circle" width={65} height={65} />
+              <Box sx={{ marginLeft: 2 }}>
+                <Typography variant="body2">
+                  <Skeleton width={100} />
+                </Typography>
+                <Typography variant="body2">
+                  <Skeleton width={60} />
+                </Typography>
+              </Box>
+            </Box>
+          </CardContent>
+          <CardActions>
+            <IconButton disabled>
+              <DeleteOutlinedIcon />
+            </IconButton>
+            <IconButton disabled>
+              <GetAppOutlinedIcon />
+            </IconButton>
+          </CardActions>
+        </Box>
+        </>
   );
 }
 

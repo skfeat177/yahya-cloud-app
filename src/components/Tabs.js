@@ -7,7 +7,7 @@ import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutl
 import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
-
+import SearchIcon from '@mui/icons-material/Search';
 export default function Tabs() {
   const navigate = useNavigate();
   const [value, setValue] = useState('/files'); // Initialize the value state
@@ -35,6 +35,12 @@ export default function Tabs() {
           label={'Code'}
           value="/code"
           icon={<CodeOutlinedIcon />}
+          sx={{ fontSize: 12, minWidth: 0 }}
+        />
+        <BottomNavigationAction
+          label={'Search'}
+          value="/search"
+          icon={<SearchIcon />}
           sx={{ fontSize: 12, minWidth: 0 }}
         />
         <BottomNavigationAction

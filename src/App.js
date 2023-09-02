@@ -10,6 +10,7 @@ import Files from './pages/Files';
 import Text from './pages/Text';
 import Code from './pages/Code';
 import Link from './pages/Link';
+import Search from './pages/Search';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/upload-text" element={<UploadText />} />
           <Route path="/upload-code" element={<UploadCode />} />
           <Route path="/upload-link" element={<UploadLink />} />
+          <Route path="/search" element={<Search/>} />
         </Routes>     
       <Tabs />
   </BrowserRouter>

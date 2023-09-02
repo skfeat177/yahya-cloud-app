@@ -8,13 +8,9 @@ import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import { Box, Snackbar, Alert, Skeleton, CircularProgress } from '@mui/material';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { okaidia } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-function Text() {
+function Link() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -27,7 +23,7 @@ function Text() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`https://quick-share-cors.vercel.app/getlimiteddata?count=3&type=text&page=${page}`);
+      const response = await fetch(`https://quick-share-cors.vercel.app/getlimiteddata?count=3&type=link&page=${page}`);
       if (response.ok) {
         const responseData = await response.json();
         if (page === 1) {
@@ -77,26 +73,24 @@ function Text() {
     document.execCommand('copy');
     document.body.removeChild(textArea);
   
-    setSnackbarMessage('Text copied to clipboard.');
+    setSnackbarMessage('Link copied to clipboard.');
     setSnackbarOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    setSnackbarMessage('Text deleted successfully.');
-    setSnackbarOpen(true);
-  
-    try {
-      const response = await fetch(`https://quick-share-cors.vercel.app/deletedata?id=${id}`, {
-        method: 'DELETE',
-      });
-  
-      if (response.ok) {
-        // Refresh data after a successful delete
-        fetchData();
-      }
-    } catch (error) {
-      console.error('Error deleting data:', error);
-    }
+  const handleDelete = (fileId) => {
+    fetch(`https://quick-share-cors.vercel.app/deletedata?id=${fileId}`, {
+      method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(data => {
+      setSnackbarMessage(data.message);
+      setSnackbarOpen(true);
+      // Update file list by filtering out the deleted file
+      setData(prevFileData => prevFileData.filter(file => file._id !== fileId));
+    })
+    .catch(error => {
+      console.error('Error deleting file:', error);
+    });
   };
   
 
@@ -137,7 +131,7 @@ function Text() {
   style={{display:'flex',justifyContent:'center' ,flexDirection:'column',marginInline:'auto'}}
 >
   {data.map((item) => (
-        <Card key={item._id} sx={{ width: '99%', display: 'flex', flexDirection: 'column', marginBottom: '20px',marginInline:'auto',boxSizing:'border-box'}} elevation={5}>
+        <Card key={item._id} sx={{ width: '99%', display: 'flex', flexDirection: 'column', marginBottom: '20px',marginInline:'auto',boxSizing:'border-box'}} elevation={4}>
         <CardContent>
           <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
             {item.dataName}
@@ -154,17 +148,19 @@ function Text() {
               hour12: true,
             })}
           </Typography>
-              <div style={{ width: '100%' }}>
+                <div style={{ width: '100%' }}>
+                <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                 <SyntaxHighlighter language="javascript" style={okaidia}>
-                  {item.dataContent}
+                  {item.link}
                 </SyntaxHighlighter>
+                </a>
               </div>
         </CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', paddingRight: '20px', gap: 2, marginTop: 'auto', marginBottom: 2 }}>
           <Button startIcon={<DeleteOutlinedIcon />} variant="outlined" color="error" onClick={() => handleDelete(item._id)}>
             Delete
           </Button>
-          <Button startIcon={<FileCopyOutlinedIcon />} variant="contained" color="primary" onClick={() => copyToClipboard(item.dataContent)}>
+          <Button startIcon={<FileCopyOutlinedIcon />} variant="contained" color="primary" onClick={() => copyToClipboard(item.link)}>
             Copy
           </Button>
         </Box>
@@ -240,4 +236,4 @@ function SkeletonLoader() {
   );
 }
 
-export default Text;
+export default Link;

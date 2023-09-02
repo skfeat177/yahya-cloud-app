@@ -99,7 +99,7 @@ function Link() {
       ref={containerRef}
       style={{
         marginInline: '10px',
-        marginTop: '90px',
+        marginTop: '80px',
         marginBottom: '90px',
         display: 'flex',
         justifyContent: 'flex-start',
@@ -189,11 +189,10 @@ function Link() {
     </div>
   );
 }
-
 function SkeletonLoader() {
   return (
-    <Box sx={{ width: '99%', marginBottom: '20px',marginInline:'auto'}}>
-    <Card sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
+    <Box sx={{ width: '100%', marginBottom: '20px',marginInline:'auto'}}>
+    <Box sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
       <CardContent>
         <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
           <Skeleton variant="text" width="50%" />
@@ -205,8 +204,8 @@ function SkeletonLoader() {
           <Skeleton variant="rectangular" height={80} />
         </Typography>
       </CardContent>
-    </Card>
-    <Card sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
+    </Box>
+    <Box sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
       <CardContent>
         <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
           <Skeleton variant="text" width="50%" />
@@ -218,8 +217,8 @@ function SkeletonLoader() {
           <Skeleton variant="rectangular" height={80} />
         </Typography>
       </CardContent>
-    </Card>
-    <Card sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
+    </Box>
+    <Box sx={{ width: '100%', marginBottom: '20px' }} elevation={3}>
       <CardContent>
         <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
           <Skeleton variant="text" width="50%" />
@@ -231,9 +230,10 @@ function SkeletonLoader() {
           <Skeleton variant="rectangular" height={80} />
         </Typography>
       </CardContent>
-    </Card>
+    </Box>
     </Box>
   );
 }
+
 
 export default Link;

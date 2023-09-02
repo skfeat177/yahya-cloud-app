@@ -231,7 +231,7 @@ const handleKeyPress = (event) => {
           <SearchIcon />
         </IconButton>
       </Box>
-<Box sx={{marginTop:5,marginInline:2,marginBottom:11}}>
+<Box sx={{marginTop:3,marginInline:1,marginBottom:11}}>
       {messageToDisplay ? (
         messageToDisplay
       ) : (

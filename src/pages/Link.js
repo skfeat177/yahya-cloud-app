@@ -8,6 +8,10 @@ import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import { Box, Snackbar, Alert, Skeleton, CircularProgress } from '@mui/material';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { okaidia } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 function Text() {
@@ -23,7 +27,7 @@ function Text() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`https://quick-share-cors.vercel.app/getlimiteddata?count=3&type=link&page=${page}`);
+      const response = await fetch(`https://quick-share-cors.vercel.app/getlimiteddata?count=3&type=text&page=${page}`);
       if (response.ok) {
         const responseData = await response.json();
         if (page === 1) {
@@ -73,12 +77,12 @@ function Text() {
     document.execCommand('copy');
     document.body.removeChild(textArea);
   
-    setSnackbarMessage('Link copied to clipboard.');
+    setSnackbarMessage('Text copied to clipboard.');
     setSnackbarOpen(true);
   };
 
   const handleDelete = async (id) => {
-    setSnackbarMessage('Code deleted successfully.');
+    setSnackbarMessage('Text deleted successfully.');
     setSnackbarOpen(true);
   
     try {
@@ -150,19 +154,17 @@ function Text() {
               hour12: true,
             })}
           </Typography>
-                <div style={{ width: '100%' }}>
-                <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+              <div style={{ width: '100%' }}>
                 <SyntaxHighlighter language="javascript" style={okaidia}>
-                  {item.link}
+                  {item.dataContent}
                 </SyntaxHighlighter>
-                </a>
               </div>
         </CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', paddingRight: '20px', gap: 2, marginTop: 'auto', marginBottom: 2 }}>
           <Button startIcon={<DeleteOutlinedIcon />} variant="outlined" color="error" onClick={() => handleDelete(item._id)}>
             Delete
           </Button>
-          <Button startIcon={<FileCopyOutlinedIcon />} variant="contained" color="primary" onClick={() => copyToClipboard(item.link)}>
+          <Button startIcon={<FileCopyOutlinedIcon />} variant="contained" color="primary" onClick={() => copyToClipboard(item.dataContent)}>
             Copy
           </Button>
         </Box>

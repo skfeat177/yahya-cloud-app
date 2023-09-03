@@ -83,7 +83,7 @@ function Files() {
     })
     .then(response => response.json())
     .then(data => {
-      setSnackbarMessage(data.message);
+      setSnackbarMessage("File Deleted Successfully");
       setSnackbarOpen(true);
       // Update file list by filtering out the deleted file
       setFileData(prevFileData => prevFileData.filter(file => file._id !== fileId));
@@ -144,6 +144,7 @@ function Files() {
         flexWrap: 'wrap',
         overflowX: 'hidden',
         width: '100%',
+        marginBottom:'25px'
       }}
       onScroll={handleScroll}
     >
@@ -165,22 +166,43 @@ function Files() {
             next={() => setPage((prevPage) => prevPage + 1)}
             hasMore={hasMore}
             loader={
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80px', marginBottom: '100px' }}>
-                <CircularProgress thickness={6} size={35} /> <p style={{ fontSize: 25, marginLeft: '10px', color: 'grey' }}>
-                  <b>Loading..</b>
-                </p>
-              </div>
+              <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '40px' }} elevation={3}>
+              <CardContent>
+                <Typography variant="body1">
+                  <Skeleton width={'100%'} />
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Skeleton variant="circle" width={65} height={65} />
+                  <Box sx={{ marginLeft: 2 }}>
+                    <Typography variant="body2">
+                      <Skeleton width={100} />
+                    </Typography>
+                    <Typography variant="body2">
+                      <Skeleton width={60} />
+                    </Typography>
+                  </Box>
+                </Box>
+              </CardContent>
+              <CardActions>
+                <IconButton disabled>
+                  <DeleteOutlinedIcon />
+                </IconButton>
+                <IconButton disabled>
+                  <GetAppOutlinedIcon />
+                </IconButton>
+              </CardActions>
+            </Box>
             }
             endMessage={
-              <p style={{ textAlign: 'center', fontSize: 20, marginBottom: '100px' }}>
-                <b>No more data to load</b>
-              </p>
+              <Typography variant="body1" sx={{marginTop:'30px',textAlign:'center',marginBottom:'70px'}}>
+              No more data available
+         </Typography>
             }
             style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', marginInline: 'auto' }}
           >
             {fileData.map((file) => (
               <div style={{ width: "100%", marginInline: 'auto', marginBottom: 4 }}>
-                <Card key={file._id} sx={{ width: '98%', display: 'flex', alignItems: 'center', margin: '0 auto', marginBottom: '10px', justfySelf: 'center' }} elevation={3}>
+                <Card key={file._id} sx={{ width: '98%', display: 'flex', alignItems: 'center', margin: '0 auto', marginBottom: '10px', justfySelf: 'center' }} elevation={2}>
                   <CardContent sx={{ width: '100%' }}>
                     <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'black', width: '100%' }}>
                       {file.fileDescription}

@@ -160,7 +160,7 @@ export default function CenteredCard() {
                                     {selectedFile ? getIconForFileType(selectedFile.type) : <InsertDriveFileOutlinedIcon sx={{ fontSize: 90 }} />}
                                     <Typography variant="h6" color="initial" fontWeight="bold">{selectedFile ? selectedFile.name : 'No File Selected'}</Typography>
                                     <Typography variant="body1" color="initial" fontWeight="bold">Size: {selectedFile ? (selectedFile.size / 1024).toFixed(2) : 0.0} KB</Typography>
-                                    <TextField size='small' id="filedescription" label="File Description" variant="outlined" sx={{width:300,marginBottom:-2,marginTop:1}} value={filedescription} onChange={handleDescription} />
+                                    <TextField size='small' id="filedescription" label="File Name" variant="outlined" sx={{width:300,marginBottom:-2,marginTop:1}} value={filedescription} onChange={handleDescription} />
                                 </Box>
                                 <RadioGroup
                                     row

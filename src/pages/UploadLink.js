@@ -96,7 +96,7 @@ function UploadText() {
           </Box>
         </CardContent>
       </Card>
-      <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} open={alertOpen} autoHideDuration={500} onClose={() => setAlertOpen(false)}>
+      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={alertOpen} autoHideDuration={500} onClose={() => setAlertOpen(false)}>
       <MuiAlert severity={alertSeverity}
          elevation={6}
           variant="filled" 

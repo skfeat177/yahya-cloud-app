@@ -24,7 +24,7 @@ function UploadText() {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Assuming you want to send the dataName and dataContent as query parameters
-      const queryParams = `?dataName=${dataName}&dataContent=${dataContent}dataType=text`;
+      const queryParams = `?dataName=${dataName}&dataContent=${dataContent}&dataType=text`;
 
       // Perform the POST request
       const response = await fetch(`https://quick-share-cors.vercel.app/postdata${queryParams}`, {
@@ -38,7 +38,7 @@ function UploadText() {
 
       if (response.ok) {
         setAlertSeverity('success');
-        setAlertMessage('Data posted successfully.');
+        setAlertMessage('Text posted successfully.');
       } else {
         setAlertSeverity('error');
         setAlertMessage('Unexcepted Error Occured.');

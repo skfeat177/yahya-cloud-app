@@ -158,9 +158,9 @@ function Link() {
           </Typography>
                 <div style={{ width: '100%' }}>
                 <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                <SyntaxHighlighter language="javascript" style={okaidia}>
+                <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'white',backgroundColor:'#272822', whiteSpace: "pre-line" }}>
                   {item.link}
-                </SyntaxHighlighter>
+                  </Typography>
                 </a>
               </div>
         </CardContent>

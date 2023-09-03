@@ -340,9 +340,11 @@ const handleKeyPress = (event) => {
                 <Typography variant="body1" sx={{ marginBottom: 1, color: 'darkgrey' }}>
                   {new Date(item.postedAt).toLocaleString('en-IN', options)}
                 </Typography>
-                <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'grey', whiteSpace: "pre-line" }}>
+                <div style={{width:'100%'}}>
+                  <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'white',backgroundColor:'#272822', whiteSpace: "pre-line" }}>
                   {item.dataContent}
-                </Typography>
+                  </Typography>
+                  </div>
               </CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', paddingRight: '20px', gap: 2, marginTop: 'auto', marginBottom: 2 }}>
                 <Button startIcon={<DeleteOutlinedIcon />} variant="outlined" color="error" onClick={() => handleDelete(item._id)}>

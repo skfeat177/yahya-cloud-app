@@ -159,11 +159,11 @@ function Text() {
               hour12: true,
             })}
           </Typography>
-              <div style={{ width: '100%' }}>
-                <SyntaxHighlighter language="javascript" style={okaidia}>
+          <div style={{width:'100%'}}>
+                  <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'white',backgroundColor:'#272822', whiteSpace: "pre-line" }}>
                   {item.dataContent}
-                </SyntaxHighlighter>
-              </div>
+                  </Typography>
+                  </div>
         </CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', paddingRight: '20px', gap: 2, marginTop: 'auto', marginBottom: 2 }}>
           <Button startIcon={<DeleteOutlinedIcon />} variant="outlined" color="error" onClick={() => handleDelete(item._id)}>

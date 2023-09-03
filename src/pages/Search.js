@@ -313,9 +313,9 @@ const handleKeyPress = (event) => {
                 </Typography>
                 <div style={{ width: '100%' }}>
                   <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                    <Typography variant="body1" sx={{ cursor: 'pointer', marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'blue', width: '100%' }}>
-                      {item.link}
-                    </Typography>
+                  <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'white',backgroundColor:'#272822', whiteSpace: "pre-line" }}>
+                  {item.link}
+                  </Typography>
                   </a>
                 </div>
               </CardContent>

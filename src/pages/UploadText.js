@@ -62,6 +62,7 @@ function UploadText() {
       justifyContent="center"
       alignItems="center"
       minHeight="100vh"
+      sx={{marginInline:2}}
     >
       <Card>
         <CardContent>

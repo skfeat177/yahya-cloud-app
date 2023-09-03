@@ -83,7 +83,7 @@ function Link() {
     })
     .then(response => response.json())
     .then(data => {
-      setSnackbarMessage(data.message);
+      setSnackbarMessage("Link Deleted Successfully");
       setSnackbarOpen(true);
       // Update file list by filtering out the deleted file
       setData(prevFileData => prevFileData.filter(file => file._id !== fileId));
@@ -117,21 +117,29 @@ function Link() {
   next={handleLoadMore}
   hasMore={hasMore} 
   loader={
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80px'}}>
-      <CircularProgress thickness={6} size={35}/>     <p style={{ fontSize:25,marginLeft:'10px',color:'grey' }}>
-      <b>Loading..</b>
-    </p>
-    </div>
+    <Box sx={{ width: '100%'}}>
+    <CardContent>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+        <Skeleton variant="text" width="50%" />
+      </Typography>
+      <Typography variant="body1" sx={{ marginBottom: 1 }}>
+        <Skeleton variant="text" width="20%" />
+      </Typography>
+      <Typography variant="body1" sx={{ marginBottom: 2 }}>
+        <Skeleton variant="rectangular" height={80} />
+      </Typography>
+    </CardContent>
+  </Box>
   }
   endMessage={
-    <p style={{ textAlign: 'center',fontSize:20 }}>
-      <b>No more data to load</b>
-    </p>
+    <Typography variant="body1" sx={{marginTop:'35px',textAlign:'center',marginBottom:'15px'}}>
+    No more data available
+</Typography>
   }
   style={{display:'flex',justifyContent:'center' ,flexDirection:'column',marginInline:'auto'}}
 >
   {data.map((item) => (
-        <Card key={item._id} sx={{ width: '99%', display: 'flex', flexDirection: 'column', marginBottom: '20px',marginInline:'auto',boxSizing:'border-box'}} elevation={4}>
+        <Card key={item._id} sx={{ width: '99%', display: 'flex', flexDirection: 'column', marginBottom: '10px',marginInline:'auto',boxSizing:'border-box'}} elevation={2}>
         <CardContent>
           <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
             {item.dataName}

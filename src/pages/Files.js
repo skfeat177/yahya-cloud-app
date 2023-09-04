@@ -17,9 +17,11 @@ import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 import PhpIcon from '@mui/icons-material/Php';
 import FolderZipOutlinedIcon from '@mui/icons-material/FolderZipOutlined';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import { Box, Skeleton, Snackbar,CircularProgress,Alert } from '@mui/material';
+import { Box, Skeleton, Snackbar, CircularProgress, Alert } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
+import { Download } from '@mui/icons-material';
 
 function Files() {
   const [fileData, setFileData] = useState([]);
@@ -55,7 +57,7 @@ function Files() {
       setLoading(false); // Data is loaded or if there's an error, set loading to false
     }
   };
-  
+
   const handleLoadMore = () => {
     setPage(prevPage => prevPage + 1); // Load the next page when the "Load More" button is clicked
   };
@@ -63,8 +65,8 @@ function Files() {
   useEffect(() => {
     fetchData(); // Fetch data when the component mounts or when the page changes
   }, [page]);
-  
-  
+
+
   const handleScroll = () => {
     if (
       containerRef.current &&
@@ -81,16 +83,16 @@ function Files() {
     fetch(`https://quick-share-cors.vercel.app/deletefile?id=${fileId}`, {
       method: 'DELETE'
     })
-    .then(response => response.json())
-    .then(data => {
-      setSnackbarMessage("File Deleted Successfully");
-      setSnackbarOpen(true);
-      // Update file list by filtering out the deleted file
-      setFileData(prevFileData => prevFileData.filter(file => file._id !== fileId));
-    })
-    .catch(error => {
-      console.error('Error deleting file:', error);
-    });
+      .then(response => response.json())
+      .then(data => {
+        setSnackbarMessage("File Deleted Successfully");
+        setSnackbarOpen(true);
+        // Update file list by filtering out the deleted file
+        setFileData(prevFileData => prevFileData.filter(file => file._id !== fileId));
+      })
+      .catch(error => {
+        console.error('Error deleting file:', error);
+      });
   };
 
   const getIconForFileType = (fileType) => {
@@ -133,7 +135,22 @@ function Files() {
     timeZone: 'Asia/Kolkata',
     hour12: true,
   };
+  const copyToClipboard = (content) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = content; // Do not remove newline characters
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
 
+    setSnackbarMessage('Download Link copied to clipboard.');
+    setSnackbarOpen(true);
+  };
+
+  const Download = () => {
+    setSnackbarMessage('Download has been started');
+    setSnackbarOpen(true)
+  }
   return (
     <div
       ref={containerRef}
@@ -144,7 +161,7 @@ function Files() {
         flexWrap: 'wrap',
         overflowX: 'hidden',
         width: '100%',
-        marginBottom:'25px'
+        marginBottom: '25px'
       }}
       onScroll={handleScroll}
     >
@@ -167,36 +184,36 @@ function Files() {
             hasMore={hasMore}
             loader={
               <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '40px' }} elevation={3}>
-              <CardContent>
-                <Typography variant="body1">
-                  <Skeleton width={'100%'} />
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Skeleton variant="circle" width={65} height={65} />
-                  <Box sx={{ marginLeft: 2 }}>
-                    <Typography variant="body2">
-                      <Skeleton width={100} />
-                    </Typography>
-                    <Typography variant="body2">
-                      <Skeleton width={60} />
-                    </Typography>
+                <CardContent>
+                  <Typography variant="body1">
+                    <Skeleton width={'100%'} />
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Skeleton variant="circle" width={65} height={65} />
+                    <Box sx={{ marginLeft: 2 }}>
+                      <Typography variant="body2">
+                        <Skeleton width={100} />
+                      </Typography>
+                      <Typography variant="body2">
+                        <Skeleton width={60} />
+                      </Typography>
+                    </Box>
                   </Box>
-                </Box>
-              </CardContent>
-              <CardActions>
-                <IconButton disabled>
-                  <DeleteOutlinedIcon />
-                </IconButton>
-                <IconButton disabled>
-                  <GetAppOutlinedIcon />
-                </IconButton>
-              </CardActions>
-            </Box>
+                </CardContent>
+                <CardActions>
+                  <IconButton disabled>
+                    <DeleteOutlinedIcon />
+                  </IconButton>
+                  <IconButton disabled>
+                    <GetAppOutlinedIcon />
+                  </IconButton>
+                </CardActions>
+              </Box>
             }
             endMessage={
-              <Typography variant="body1" sx={{marginTop:'30px',textAlign:'center',marginBottom:'70px'}}>
-              No more data available
-         </Typography>
+              <Typography variant="body1" sx={{ marginTop: '30px', textAlign: 'center', marginBottom: '70px' }}>
+                No more data available
+              </Typography>
             }
             style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', marginInline: 'auto' }}
           >
@@ -220,10 +237,14 @@ function Files() {
                     <IconButton color="error" onClick={() => handleDeleteClick(file._id)}>
                       <DeleteOutlinedIcon />
                     </IconButton>
-  
+
+                    <IconButton color="primary" onClick={() => copyToClipboard(file.fileUrl)}>
+                      <FileCopyOutlinedIcon />
+                    </IconButton>
+
                     {/* Download Button */}
                     <a href={file.fileUrl} rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                      <IconButton color="primary">
+                      <IconButton color="success" onClick={Download}>
                         <GetAppOutlinedIcon />
                       </IconButton>
                     </a>
@@ -252,143 +273,158 @@ function Files() {
       </Snackbar>
     </div>
   );
-  
+
 }
 
 function SkeletonLoader() {
   return (
     <>
-               <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
-          <CardContent>
-            <Typography variant="body1">
-              <Skeleton width={'100%'} />
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Skeleton variant="circle" width={65} height={65} />
-              <Box sx={{ marginLeft: 2 }}>
-                <Typography variant="body2">
-                  <Skeleton width={100} />
-                </Typography>
-                <Typography variant="body2">
-                  <Skeleton width={60} />
-                </Typography>
-              </Box>
+      <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
+        <CardContent>
+          <Typography variant="body1">
+            <Skeleton width={'100%'} />
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Skeleton variant="circle" width={65} height={65} />
+            <Box sx={{ marginLeft: 2 }}>
+              <Typography variant="body2">
+                <Skeleton width={100} />
+              </Typography>
+              <Typography variant="body2">
+                <Skeleton width={60} />
+              </Typography>
             </Box>
-          </CardContent>
-          <CardActions>
-            <IconButton disabled>
-              <DeleteOutlinedIcon />
-            </IconButton>
-            <IconButton disabled>
-              <GetAppOutlinedIcon />
-            </IconButton>
-          </CardActions>
-        </Box>
-               <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
-          <CardContent>
-            <Typography variant="body1">
-              <Skeleton width={'100%'} />
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Skeleton variant="circle" width={65} height={65} />
-              <Box sx={{ marginLeft: 2 }}>
-                <Typography variant="body2">
-                  <Skeleton width={100} />
-                </Typography>
-                <Typography variant="body2">
-                  <Skeleton width={60} />
-                </Typography>
-              </Box>
+          </Box>
+        </CardContent>
+        <CardActions>
+          <IconButton disabled>
+            <DeleteOutlinedIcon />
+          </IconButton>
+          <IconButton disabled>
+            <FileCopyOutlinedIcon />
+          </IconButton>
+          <IconButton disabled>
+            <GetAppOutlinedIcon />
+          </IconButton>
+        </CardActions>
+      </Box>
+      <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
+        <CardContent>
+          <Typography variant="body1">
+            <Skeleton width={'100%'} />
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Skeleton variant="circle" width={65} height={65} />
+            <Box sx={{ marginLeft: 2 }}>
+              <Typography variant="body2">
+                <Skeleton width={100} />
+              </Typography>
+              <Typography variant="body2">
+                <Skeleton width={60} />
+              </Typography>
             </Box>
-          </CardContent>
-          <CardActions>
-            <IconButton disabled>
-              <DeleteOutlinedIcon />
-            </IconButton>
-            <IconButton disabled>
-              <GetAppOutlinedIcon />
-            </IconButton>
-          </CardActions>
-        </Box>
-               <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
-          <CardContent>
-            <Typography variant="body1">
-              <Skeleton width={'100%'} />
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Skeleton variant="circle" width={65} height={65} />
-              <Box sx={{ marginLeft: 2 }}>
-                <Typography variant="body2">
-                  <Skeleton width={100} />
-                </Typography>
-                <Typography variant="body2">
-                  <Skeleton width={60} />
-                </Typography>
-              </Box>
+          </Box>
+        </CardContent>
+        <CardActions>
+          <IconButton disabled>
+            <DeleteOutlinedIcon />
+          </IconButton>
+          <IconButton disabled>
+            <FileCopyOutlinedIcon />
+          </IconButton>
+          <IconButton disabled>
+            <GetAppOutlinedIcon />
+          </IconButton>
+        </CardActions>
+      </Box>
+      <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
+        <CardContent>
+          <Typography variant="body1">
+            <Skeleton width={'100%'} />
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Skeleton variant="circle" width={65} height={65} />
+            <Box sx={{ marginLeft: 2 }}>
+              <Typography variant="body2">
+                <Skeleton width={100} />
+              </Typography>
+              <Typography variant="body2">
+                <Skeleton width={60} />
+              </Typography>
             </Box>
-          </CardContent>
-          <CardActions>
-            <IconButton disabled>
-              <DeleteOutlinedIcon />
-            </IconButton>
-            <IconButton disabled>
-              <GetAppOutlinedIcon />
-            </IconButton>
-          </CardActions>
-        </Box>
-               <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
-          <CardContent>
-            <Typography variant="body1">
-              <Skeleton width={'100%'} />
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Skeleton variant="circle" width={65} height={65} />
-              <Box sx={{ marginLeft: 2 }}>
-                <Typography variant="body2">
-                  <Skeleton width={100} />
-                </Typography>
-                <Typography variant="body2">
-                  <Skeleton width={60} />
-                </Typography>
-              </Box>
+          </Box>
+        </CardContent>
+        <CardActions>
+          <IconButton disabled>
+            <DeleteOutlinedIcon />
+          </IconButton>
+          <IconButton disabled>
+            <FileCopyOutlinedIcon />
+          </IconButton>
+          <IconButton disabled>
+            <GetAppOutlinedIcon />
+          </IconButton>
+        </CardActions>
+      </Box>
+      <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
+        <CardContent>
+          <Typography variant="body1">
+            <Skeleton width={'100%'} />
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Skeleton variant="circle" width={65} height={65} />
+            <Box sx={{ marginLeft: 2 }}>
+              <Typography variant="body2">
+                <Skeleton width={100} />
+              </Typography>
+              <Typography variant="body2">
+                <Skeleton width={60} />
+              </Typography>
             </Box>
-          </CardContent>
-          <CardActions>
-            <IconButton disabled>
-              <DeleteOutlinedIcon />
-            </IconButton>
-            <IconButton disabled>
-              <GetAppOutlinedIcon />
-            </IconButton>
-          </CardActions>
-        </Box>
-               <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
-          <CardContent>
-            <Typography variant="body1">
-              <Skeleton width={'100%'} />
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Skeleton variant="circle" width={65} height={65} />
-              <Box sx={{ marginLeft: 2 }}>
-                <Typography variant="body2">
-                  <Skeleton width={100} />
-                </Typography>
-                <Typography variant="body2">
-                  <Skeleton width={60} />
-                </Typography>
-              </Box>
+          </Box>
+        </CardContent>
+        <CardActions>
+          <IconButton disabled>
+            <DeleteOutlinedIcon />
+          </IconButton>
+          <IconButton disabled>
+            <FileCopyOutlinedIcon />
+          </IconButton>
+          <IconButton disabled>
+            <GetAppOutlinedIcon />
+          </IconButton>
+        </CardActions>
+      </Box>
+      <Box sx={{ width: '99%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
+        <CardContent>
+          <Typography variant="body1">
+            <Skeleton width={'100%'} />
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Skeleton variant="circle" width={65} height={65} />
+            <Box sx={{ marginLeft: 2 }}>
+              <Typography variant="body2">
+                <Skeleton width={100} />
+              </Typography>
+              <Typography variant="body2">
+                <Skeleton width={60} />
+              </Typography>
             </Box>
-          </CardContent>
-          <CardActions>
-            <IconButton disabled>
-              <DeleteOutlinedIcon />
-            </IconButton>
-            <IconButton disabled>
-              <GetAppOutlinedIcon />
-            </IconButton>
-          </CardActions>
-        </Box>
-        </>
+          </Box>
+        </CardContent>
+        <CardActions>
+          <IconButton disabled>
+            <DeleteOutlinedIcon />
+          </IconButton>
+                    <IconButton disabled>
+            <FileCopyOutlinedIcon />
+          </IconButton>
+          <IconButton disabled>
+            <GetAppOutlinedIcon />
+          </IconButton>
+        </CardActions>
+      </Box>
+    </>
   );
 }
 

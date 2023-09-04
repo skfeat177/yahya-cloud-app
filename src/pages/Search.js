@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useRef,useEffect} from 'react';
 import {
   Box,
   TextField,
@@ -33,14 +33,18 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material'; // Add missing import
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { okaidia } from 'react-syntax-highlighter/dist/esm/styles/prism';
-
+import { useNavigate } from 'react-router-dom';
 
 function Search() {
+
+
+
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('code');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [autoFocus, setAutoFocus] = useState(true);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
 
@@ -145,7 +149,7 @@ function Search() {
     })
     .then(response => response.json())
     .then(data => {
-      setSnackbarMessage(data.message);
+      setSnackbarMessage("File Deleted Successfully");
       setSnackbarOpen(true);
       handleSearch()
     })
@@ -189,11 +193,35 @@ const selectType=(e)=>{
 
 const handleKeyPress = (event) => {
   if (event.key === 'Enter') {
-    console.log('Enter key pressed');
-    handleSearch()
- 
+    event.preventDefault(); // Prevent form submission if inside a form element
+    handleSearch();
+    setAutoFocus(false);
+
+    // Remove focus from the input field
+    event.target.blur();
+
+    // Hide the Android keyboard
+    if (document.activeElement) {
+      document.activeElement.blur();
+    }
   }
 };
+
+const copyFileToClipboard = (content) => {
+  const textArea = document.createElement('textarea');
+  textArea.value = content; // Do not remove newline characters
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textArea);
+
+  setSnackbarMessage('Download Link copied to clipboard.');
+  setSnackbarOpen(true);
+};
+const Download = ()=>{
+  setSnackbarMessage('Download has been started');
+  setSnackbarOpen(true)
+}
   return (
     <Box sx={{ marginTop: 11 }}>
       <Box sx={{ marginInline: 2, display: 'flex', alignItems: 'center' }}>
@@ -207,6 +235,7 @@ const handleKeyPress = (event) => {
           value={searchQuery}
           onChange={searchChange}
           onKeyPress={handleKeyPress}
+          autoFocus={autoFocus}
         />
         <Select
           labelId="demo-simple-select-label"
@@ -222,14 +251,6 @@ const handleKeyPress = (event) => {
           <MenuItem value="text">Text</MenuItem>
           <MenuItem value="link">Link</MenuItem>
         </Select>
-        <IconButton
-          variant="contained"
-          color="primary"
-          size="medium"
-          onClick={handleSearch}
-        >
-          <SearchIcon />
-        </IconButton>
       </Box>
 <Box sx={{marginTop:3,marginInline:1,marginBottom:11}}>
       {messageToDisplay ? (
@@ -291,12 +312,16 @@ const handleKeyPress = (event) => {
                   <DeleteOutlinedIcon />
                 </IconButton>
 
-                {/* Download Button */}
-                <a href={file.fileUrl} rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                  <IconButton color="primary">
-                    <GetAppOutlinedIcon />
-                  </IconButton>
-                </a>
+                <IconButton color="primary" onClick={() => copyFileToClipboard(file.fileUrl)}>
+                     <FileCopyOutlinedIcon />
+                    </IconButton>
+  
+                    {/* Download Button */}
+                    <a href={file.fileUrl} rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                      <IconButton color="success" onClick={Download}>
+                        <GetAppOutlinedIcon />
+                      </IconButton>
+                    </a>
               </CardActions>
             </Card>
           ))
@@ -313,9 +338,9 @@ const handleKeyPress = (event) => {
                 </Typography>
                 <div style={{ width: '100%' }}>
                   <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                  <Typography variant="body1" sx={{ marginBottom: 2,padding:1, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'white',backgroundColor:'#272822', whiteSpace: "pre-line" }}>
-                  {item.link}
-                  </Typography>
+                    <Typography variant="body1" sx={{ cursor: 'pointer', marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'blue', width: '100%' }}>
+                      {item.link}
+                    </Typography>
                   </a>
                 </div>
               </CardContent>
@@ -340,11 +365,9 @@ const handleKeyPress = (event) => {
                 <Typography variant="body1" sx={{ marginBottom: 1, color: 'darkgrey' }}>
                   {new Date(item.postedAt).toLocaleString('en-IN', options)}
                 </Typography>
-                <div style={{width:'100%'}}>
-                  <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'white',backgroundColor:'#272822', whiteSpace: "pre-line" }}>
+                <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'grey', whiteSpace: "pre-line" }}>
                   {item.dataContent}
-                  </Typography>
-                  </div>
+                </Typography>
               </CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', paddingRight: '20px', gap: 2, marginTop: 'auto', marginBottom: 2 }}>
                 <Button startIcon={<DeleteOutlinedIcon />} variant="outlined" color="error" onClick={() => handleDelete(item._id)}>

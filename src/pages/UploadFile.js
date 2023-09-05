@@ -33,7 +33,7 @@ export default function CenteredCard() {
     const [alertMessage, setAlertMessage] = React.useState('');
     const [uploadProgress, setUploadProgress] = React.useState(0);
     const [selectedServer, setSelectedServer] = React.useState('vercel');
-    const [serverStatus, setServerStatus] = React.useState('Pending');
+    const [serverStatus, setServerStatus] = React.useState('Not Allowed');
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         setSelectedFile(file);

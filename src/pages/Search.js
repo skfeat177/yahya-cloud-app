@@ -304,6 +304,7 @@ const Download = ()=>{
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
+                        padding:3
                       }}
                     >
                       {file.fileDescription}
@@ -311,7 +312,6 @@ const Download = ()=>{
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   {getIconForFileType(file.fileType)}
                   <Box sx={{ marginLeft: 2 }}>
-                    <Typography variant="body2" sx={{ color: 'grey' }}>{new Date(file.uploadedDate).toLocaleString('en-IN', options)}</Typography>
                     <Typography variant="body2" sx={{ color: 'grey' }}>{new Date(file.uploadedDate).toLocaleString('en-IN', options)}</Typography>
                         <Typography variant="body2" sx={{ color: 'grey' }}>{(file.fileSize / 1024).toFixed(2)>1024?((file.fileSize / 1024).toFixed(2)/1024).toFixed(2) + " MB":(file.fileSize / 1024).toFixed(2)+" KB" }</Typography>
                   </Box>

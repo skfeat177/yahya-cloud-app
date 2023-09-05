@@ -91,7 +91,7 @@ function UploadText() {
               variant="contained"
               startIcon={<FileUploadOutlined />}
             >
-              <span>Post Link</span>
+                <span>{loading?"Posting Link":"Post Link"}</span>
             </LoadingButton>
           </Box>
         </CardContent>

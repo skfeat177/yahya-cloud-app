@@ -67,7 +67,7 @@ function UploadText() {
       <Card>
         <CardContent>
           <TextField
-            label="Data Name"
+            label="Text Name"
             variant="outlined"
             fullWidth
             margin="normal"
@@ -75,11 +75,10 @@ function UploadText() {
             onChange={(e) => setDataName(e.target.value)}
           />
           <TextField
-            label="Data Content"
+            label="Text Value"
             variant="outlined"
             fullWidth
             multiline  // Preserves newlines and spaces
-            rows={4}
             margin="normal"
             value={dataContent}
             onChange={(e) => setDataContent(e.target.value)}
@@ -93,7 +92,7 @@ function UploadText() {
               variant="contained"
               startIcon={<FileUploadOutlined />}
             >
-              <span>Post Data</span>
+             <span>{loading?"Posting Text":"Post Text"}</span>
             </LoadingButton>
           </Box>
         </CardContent>

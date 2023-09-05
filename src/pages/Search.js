@@ -295,14 +295,25 @@ const Download = ()=>{
           searchResults.map((file) => (
             <Card key={file._id} sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }} elevation={3}>
               <CardContent>
-                <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'black', width: '100%' }}>
-                  {file.fileDescription}
-                </Typography>
+              <Typography
+                      variant="body1"
+                      sx={{
+                        fontWeight: 'bold',
+                        color: 'black',
+                        width: '100%',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {file.fileDescription}
+                    </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   {getIconForFileType(file.fileType)}
                   <Box sx={{ marginLeft: 2 }}>
                     <Typography variant="body2" sx={{ color: 'grey' }}>{new Date(file.uploadedDate).toLocaleString('en-IN', options)}</Typography>
-                    <Typography variant="body2" sx={{ color: 'grey' }}>{(file.fileSize / 1024).toFixed(2)} KB</Typography>
+                    <Typography variant="body2" sx={{ color: 'grey' }}>{new Date(file.uploadedDate).toLocaleString('en-IN', options)}</Typography>
+                        <Typography variant="body2" sx={{ color: 'grey' }}>{(file.fileSize / 1024).toFixed(2)>1024?((file.fileSize / 1024).toFixed(2)/1024).toFixed(2) + " MB":(file.fileSize / 1024).toFixed(2)+" KB" }</Typography>
                   </Box>
                 </Box>
               </CardContent>

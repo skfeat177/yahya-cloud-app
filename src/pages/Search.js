@@ -304,7 +304,7 @@ const Download = ()=>{
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
-                        padding:3
+                        paddingRight:3
                       }}
                     >
                       {file.fileDescription}

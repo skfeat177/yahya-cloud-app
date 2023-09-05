@@ -160,7 +160,7 @@ function Text() {
             })}
           </Typography>
           <div style={{width:'100%'}}>
-                  <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'white',backgroundColor:'#272822', whiteSpace: "pre-line" }}>
+                  <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '10px', borderRadius: 2, color: '#e6db74',backgroundColor:'#272822', whiteSpace: "pre-line" }}>
                   {item.dataContent}
                   </Typography>
                   </div>

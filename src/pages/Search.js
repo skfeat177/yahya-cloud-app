@@ -337,12 +337,12 @@ const Download = ()=>{
                   {new Date(item.postedAt).toLocaleString('en-IN', options)}
                 </Typography>
                 <div style={{ width: '100%' }}>
-                  <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                    <Typography variant="body1" sx={{ cursor: 'pointer', marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'blue', width: '100%' }}>
-                      {item.link}
-                    </Typography>
-                  </a>
-                </div>
+                <a href={item.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                <Typography variant="body1" sx={{ marginBottom: 2,padding:3, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: '#66d9ef',backgroundColor:'#272822', whiteSpace: "pre-line" }}>
+                  {item.link}
+                  </Typography>
+                </a>
+              </div>
               </CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', paddingRight: '20px', gap: 2, marginTop: 'auto', marginBottom: 2 }}>
                 <Button startIcon={<DeleteOutlinedIcon />} variant="outlined" color="error" onClick={() => handleDelete(item._id)}>
@@ -365,9 +365,11 @@ const Download = ()=>{
                 <Typography variant="body1" sx={{ marginBottom: 1, color: 'darkgrey' }}>
                   {new Date(item.postedAt).toLocaleString('en-IN', options)}
                 </Typography>
-                <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '8px', borderRadius: 2, color: 'grey', whiteSpace: "pre-line" }}>
+                <div style={{width:'100%'}}>
+                  <Typography variant="body1" sx={{ marginBottom: 2, border: '1px solid #ccc', padding: '10px', borderRadius: 2, color: '#e6db74',backgroundColor:'#272822', whiteSpace: "pre-line" }}>
                   {item.dataContent}
-                </Typography>
+                  </Typography>
+                  </div>
               </CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', paddingRight: '20px', gap: 2, marginTop: 'auto', marginBottom: 2 }}>
                 <Button startIcon={<DeleteOutlinedIcon />} variant="outlined" color="error" onClick={() => handleDelete(item._id)}>

@@ -33,7 +33,7 @@ export default function CenteredCard() {
     const [alertMessage, setAlertMessage] = React.useState('');
     const [uploadProgress, setUploadProgress] = React.useState(0);
     const [selectedServer, setSelectedServer] = React.useState('vercel');
-    const [serverStatus, setServerStatus] = React.useState('Not Ready');
+    const [serverStatus, setServerStatus] = React.useState('Pending');
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         setSelectedFile(file);
@@ -46,15 +46,23 @@ export default function CenteredCard() {
             try {
                 const response = await fetch("https://cloud-6mhy.onrender.com");
                 if (response.status === 200) {
-                    setServerStatus('Ready');
+                    setServerStatus('Allowed');
                 }
             } catch (error) {
-                setServerStatus('Pending');
+                setServerStatus('Not Allowed');
             }
         };
 
         fetchServerStatus();
-    }, []);
+
+        if (selectedFile && (selectedFile.size / 1024).toFixed(2) > 4100) {
+            setSelectedServer('render');
+            console.log("Render")
+          } else {
+            setSelectedServer('vercel');
+            console.log("vercel")
+          }
+    }, [selectedFile]);
     const handleDescription = (event) => {
         const file = event.target.value;
         setfiledescription(file);
@@ -125,7 +133,7 @@ export default function CenteredCard() {
             };
             xhr.onerror = () => {
                 setAlertSeverity('error');
-                setAlertMessage('Server error occurred');
+                setAlertMessage('An error occurred while uploading the file.');
                 setLoading(false);
                 setAlertOpen(true);
             };
@@ -134,6 +142,7 @@ export default function CenteredCard() {
         }
     };
 
+
     const handleCloseAlert = () => {
         // Clear the timeout when the alert is manually closed
         if (alertTimeout) {
@@ -141,7 +150,7 @@ export default function CenteredCard() {
         }
         setAlertOpen(false);
     };
-    const statusColor = serverStatus === 'Ready' ? 'green' : 'red';
+    const statusColor = serverStatus === 'Allowed' ? 'green' : 'red';
     return (
         <>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -150,41 +159,21 @@ export default function CenteredCard() {
 
 
                         {loading ? (
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', height: 250, marginTop: 10 }}>
-                                <CircularProgress variant="determinate" value={uploadProgress} size={150} thickness={5}/>
-                                <Typography variant="h5" color="initial" fontWeight="bold">{uploadProgress}% Uploaded</Typography>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', height: 235, marginTop: 5 }}>
+                                <CircularProgress variant="determinate" value={uploadProgress} size={140} thickness={7}/>
+                                <Typography variant="h5" color="initial" sx={{color:'primary'}} fontWeight="bold">{uploadProgress}% Uploaded</Typography>
                             </Box>
                         ) : (
                             <>
                                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
                                     {selectedFile ? getIconForFileType(selectedFile.type) : <InsertDriveFileOutlinedIcon sx={{ fontSize: 90 }} />}
                                     <Typography variant="h6" color="initial" fontWeight="bold">{selectedFile ? selectedFile.name : 'No File Selected'}</Typography>
-                                    <Typography variant="body1" color="initial" fontWeight="bold">Size: {selectedFile ? (selectedFile.size / 1024).toFixed(2) : 0.0} KB</Typography>
-                                    <TextField size='small' id="filedescription" label="File Name" variant="outlined" sx={{width:300,marginBottom:-2,marginTop:1}} value={filedescription} onChange={handleDescription} />
+                                    <Typography variant="h6" color="initial" fontWeight="bold">Size: {selectedFile ? (selectedFile.size / 1024).toFixed(2) : 0.0} KB</Typography>
+                                    <TextField size='small' id="filedescription" label="File Description" variant="outlined" sx={{width:300,marginBottom:-2,marginTop:1}} value={filedescription} onChange={handleDescription} />
                                 </Box>
-                                <RadioGroup
-                                    row
-                                    aria-label="server"
-                                    name="server"
-                                    value={selectedServer}
-                                    onChange={handleServerChange}
-                           
-                                >
-                                    <FormControlLabel
-                                        value="vercel"
-                                        control={<Radio color="primary" />}
-                                        label="Vercel"
-
-                                    />
-                                    <FormControlLabel
-                                        value="render"
-                                        control={<Radio color="primary" />}
-                                        label="Render"
-                                    />
-                                </RadioGroup>
                                 <Typography variant="body1" color="initial" style={{ fontWeight: 'bold' }}
-                                         sx={{marginTop:-2}}>
-                                    Render Server Status: <span style={{color: statusColor}}>{serverStatus}</span>
+                                         sx={{marginTop:2}}>
+                                    Larger File Upload: <span style={{color: statusColor}}>{serverStatus}</span>
                                 </Typography>
                             </>
                         )}
@@ -211,7 +200,7 @@ export default function CenteredCard() {
                                 disabled={!selectedFile || loading}
                                 startIcon={<UploadOutlinedIcon />}
                             >
-                                <span>Upload</span>
+                                <span>{loading?"Uploading":"Upload"}</span>
                             </LoadingButton>
                         </Box>
                     </CardContent>

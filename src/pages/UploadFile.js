@@ -37,6 +37,10 @@ export default function CenteredCard() {
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         setSelectedFile(file);
+        if (file) {
+            setfiledescription(file.name);
+        }
+
     };
     const handleServerChange = (event) => {
         setSelectedServer(event.target.value);
@@ -109,6 +113,7 @@ export default function CenteredCard() {
 
     const handleUploadFile = () => {
         if (selectedFile) {
+
             setLoading(true);
             setUploadProgress(0);
             const formData = new FormData();
@@ -168,8 +173,8 @@ export default function CenteredCard() {
                                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
                                     {selectedFile ? getIconForFileType(selectedFile.type) : <InsertDriveFileOutlinedIcon sx={{ fontSize: 90 }} />}
                                     <Typography variant="h6" color="initial" fontWeight="bold">{selectedFile ? selectedFile.name : 'No File Selected'}</Typography>
-                                    <Typography variant="h6" color="initial" fontWeight="bold">Size: {selectedFile ? (selectedFile.size / 1024).toFixed(2) : 0.0} KB</Typography>
-                                    <TextField size='small' id="filedescription" label="File Description" variant="outlined" sx={{width:300,marginBottom:-2,marginTop:1}} value={filedescription} onChange={handleDescription} />
+                                    <Typography variant="h6" color="initial" fontWeight="bold">Size: {selectedFile ? ((selectedFile.size / 1024).toFixed(2)>1024?((selectedFile.size / 1024).toFixed(2)/1024).toFixed(2) + " MB":(selectedFile.size / 1024).toFixed(2)+" KB" ): "0 KB"}</Typography>
+                                    <TextField size='small' id="filedescription" label="File Name" variant="outlined" sx={{width:300,marginBottom:-2,marginTop:1}} value={filedescription} onChange={handleDescription} />
                                 </Box>
                                 <Typography variant="body1" color="initial" style={{ fontWeight: 'bold' }}
                                          sx={{marginTop:2}}>

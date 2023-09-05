@@ -62,10 +62,10 @@ export default function CenteredCard() {
         if (selectedFile && (selectedFile.size / 1024).toFixed(2) > 4100) {
             setSelectedServer('render');
             console.log("Render")
-          } else {
+        } else {
             setSelectedServer('vercel');
             console.log("vercel")
-          }
+        }
     }, [selectedFile]);
     const handleDescription = (event) => {
         const file = event.target.value;
@@ -165,20 +165,24 @@ export default function CenteredCard() {
 
                         {loading ? (
                             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', height: 235, marginTop: 5 }}>
-                                <CircularProgress variant="determinate" value={uploadProgress} size={140} thickness={7}/>
-                                <Typography variant="h5" color="initial" sx={{color:'primary'}} fontWeight="bold">{uploadProgress}% Uploaded</Typography>
+                                <CircularProgress variant="determinate" value={uploadProgress} size={140} thickness={7} />
+                                <Typography variant="h5" color="initial" sx={{ color: 'primary' }} fontWeight="bold">{uploadProgress}% Uploaded</Typography>
                             </Box>
                         ) : (
                             <>
                                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
                                     {selectedFile ? getIconForFileType(selectedFile.type) : <InsertDriveFileOutlinedIcon sx={{ fontSize: 90 }} />}
-                                    <Typography variant="h6" color="initial" fontWeight="bold">{selectedFile ? selectedFile.name : 'No File Selected'}</Typography>
-                                    <Typography variant="h6" color="initial" fontWeight="bold">Size: {selectedFile ? ((selectedFile.size / 1024).toFixed(2)>1024?((selectedFile.size / 1024).toFixed(2)/1024).toFixed(2) + " MB":(selectedFile.size / 1024).toFixed(2)+" KB" ): "0 KB"}</Typography>
-                                    <TextField size='small' id="filedescription" label="Custom File Name" variant="outlined" sx={{width:300,marginBottom:-2,marginTop:1}} value={filedescription} onChange={handleDescription} />
+                                    <Typography variant="h6" color="initial" fontWeight="bold" sx={{
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                    }}>{selectedFile ? selectedFile.name : 'No File Selected'}</Typography>
+                                    <Typography variant="h6" color="initial" fontWeight="bold">Size: {selectedFile ? ((selectedFile.size / 1024).toFixed(2) > 1024 ? ((selectedFile.size / 1024).toFixed(2) / 1024).toFixed(2) + " MB" : (selectedFile.size / 1024).toFixed(2) + " KB") : "0 KB"}</Typography>
+                                    <TextField size='small' id="filedescription" label="Custom File Name" variant="outlined" sx={{ width: 300, marginBottom: -2, marginTop: 1 }} value={filedescription} onChange={handleDescription} />
                                 </Box>
                                 <Typography variant="body1" color="initial" style={{ fontWeight: 'bold' }}
-                                         sx={{marginTop:2}}>
-                                    Larger File Upload: <span style={{color: statusColor}}>{serverStatus}</span>
+                                    sx={{ marginTop: 2 }}>
+                                    Larger File Upload: <span style={{ color: statusColor }}>{serverStatus}</span>
                                 </Typography>
                             </>
                         )}
@@ -205,7 +209,7 @@ export default function CenteredCard() {
                                 disabled={!selectedFile || loading}
                                 startIcon={<UploadOutlinedIcon />}
                             >
-                                <span>{loading?"Uploading":"Upload"}</span>
+                                <span>{loading ? "Uploading" : "Upload"}</span>
                             </LoadingButton>
                         </Box>
                     </CardContent>

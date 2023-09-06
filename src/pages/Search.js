@@ -300,14 +300,10 @@ const Download = ()=>{
                       sx={{
                         fontWeight: 'bold',
                         color: 'black',
-                        width: '100%',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        paddingRight:3
                       }}
                     >
-                      {file.fileDescription}
+                      {(file.fileDescription).substring(0, 15)}
+                      {((file.fileDescription).length>15)?"...":""}
                     </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   {getIconForFileType(file.fileType)}

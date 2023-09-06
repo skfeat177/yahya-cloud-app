@@ -205,6 +205,9 @@ function Files() {
                     <DeleteOutlinedIcon />
                   </IconButton>
                   <IconButton disabled>
+            <FileCopyOutlinedIcon />
+          </IconButton>
+                  <IconButton disabled>
                     <GetAppOutlinedIcon />
                   </IconButton>
                 </CardActions>

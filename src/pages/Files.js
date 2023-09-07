@@ -253,7 +253,7 @@ function Files() {
                     </IconButton>
 
                     {/* Download Button */}
-                    <a href={file.fileUrl} rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                    <a href={file.fileUrl} rel="noopener noreferrer" download={file.fileDescription} style={{ textDecoration: 'none' }}>
                       <IconButton color="success" onClick={Download}>
                         <GetAppOutlinedIcon />
                       </IconButton>

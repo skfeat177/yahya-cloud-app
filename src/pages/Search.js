@@ -324,7 +324,7 @@ const Download = ()=>{
                     </IconButton>
   
                     {/* Download Button */}
-                    <a href={file.fileUrl} rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                    <a href={file.fileUrl}  download={file.fileDescription}  rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                       <IconButton color="success" onClick={Download}>
                         <GetAppOutlinedIcon />
                       </IconButton>

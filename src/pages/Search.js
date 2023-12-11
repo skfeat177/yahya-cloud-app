@@ -87,9 +87,9 @@ function Search() {
     setSearchResults([]); // Clear previous results
     let apiUrl = '';
     if (searchType === 'file') {
-      apiUrl = `https://quick-share-cors.vercel.app/searchfile?name=${searchQuery}`;
+      apiUrl = `https://my-yahya-cloud-server.vercel.app/searchfile?name=${searchQuery}`;
     } else {
-      apiUrl = `https://quick-share-cors.vercel.app/searchdata?name=${searchQuery}&type=${searchType}`;
+      apiUrl = `https://my-yahya-cloud-server.vercel.app//searchdata?name=${searchQuery}&type=${searchType}`;
     }
 
     fetch(apiUrl)
@@ -130,7 +130,7 @@ function Search() {
   
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`https://quick-share-cors.vercel.app/deletedata?id=${id}`, {
+      const response = await fetch(`https://my-yahya-cloud-server.vercel.app/deletedata?id=${id}`, {
         method: 'DELETE',
       });
 
@@ -144,7 +144,7 @@ function Search() {
     }
   };
   const handleDeleteClick = (fileId) => {
-    fetch(`https://quick-share-cors.vercel.app/deletefile?id=${fileId}`, {
+    fetch(`https://my-yahya-cloud-server.vercel.app/deletefile?id=${fileId}`, {
       method: 'DELETE'
     })
     .then(response => response.json())

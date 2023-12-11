@@ -27,7 +27,7 @@ function UploadText() {
       const queryParams = `?dataName=${dataName}&dataContent=${dataContent}&dataType=text`;
 
       // Perform the POST request
-      const response = await fetch(`https://quick-share-cors.vercel.app/postdata${queryParams}`, {
+      const response = await fetch(`https://my-yahya-cloud-server.vercel.app/postdata${queryParams}`, {
         method: 'POST',
         // Assuming 'link' is a variable containing the link you want to send in the request body
         body: JSON.stringify({ link: 'null' }),

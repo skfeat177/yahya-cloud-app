@@ -35,7 +35,7 @@ function Files() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`https://quick-share-cors.vercel.app/getlimitedfiles?count=5&page=${page}`);
+      const response = await fetch(`https://my-yahya-cloud-server.vercel.app/getlimitedfiles?count=5&page=${page}`);
       if (response.ok) {
         const responseData = await response.json();
         if (page === 1) {
@@ -80,7 +80,7 @@ function Files() {
 
 
   const handleDeleteClick = (fileId) => {
-    fetch(`https://quick-share-cors.vercel.app/deletefile?id=${fileId}`, {
+    fetch(`https://my-yahya-cloud-server.vercel.app/deletefile?id=${fileId}`, {
       method: 'DELETE'
     })
       .then(response => response.json())

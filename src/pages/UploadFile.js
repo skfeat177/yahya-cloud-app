@@ -105,7 +105,7 @@ export default function CenteredCard() {
 
     const getApiUrl = () => {
         if (selectedServer === 'vercel') {
-            return 'https://quick-share-cors.vercel.app';
+            return 'https://my-yahya-cloud-server.vercel.app';
         } else {
             return 'https://cloud-6mhy.onrender.com';
         }

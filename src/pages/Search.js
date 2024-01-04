@@ -89,7 +89,7 @@ function Search() {
     if (searchType === 'file') {
       apiUrl = `https://my-yahya-cloud-server.vercel.app/searchfile?name=${searchQuery}`;
     } else {
-      apiUrl = `https://my-yahya-cloud-server.vercel.app//searchdata?name=${searchQuery}&type=${searchType}`;
+      apiUrl = `https://my-yahya-cloud-server.vercel.app/searchdata?name=${searchQuery}&type=${searchType}`;
     }
 
     fetch(apiUrl)
